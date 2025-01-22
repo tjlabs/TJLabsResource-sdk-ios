@@ -12,14 +12,22 @@ public class TJLabsResourceManager {
     public func updateResources(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, String) -> Void) {
         TJLabsResourceNetworkConstants.setServerURL(region: region)
         let sectorServices = getSectorServiceFromServer(region: region, sectorId: sectorId)
+        var loadedServices = [String]()
         for service in sectorServices {
+            loadedServices.append(service)
             switch (service) {
             case TJLabsService.NAVIGATION.rawValue:
                 pathPixelManager.loadPathPixel(sectorId: sectorId, completion: { isSuccess, msg in
                     completion(isSuccess, msg)
                 })
             case TJLabsService.MAP.rawValue:
-                print("wow")
+                if !loadedServices.contains(TJLabsService.NAVIGATION.rawValue) {
+                    pathPixelManager.loadPathPixel(sectorId: sectorId, completion: { isSuccess, msg in
+                        completion(isSuccess, msg)
+                    })
+                } else {
+                    completion(true, "")
+                }
             case TJLabsService.CHAT.rawValue:
                 print("wow")
             default:
@@ -27,7 +35,7 @@ public class TJLabsResourceManager {
             }
         }
         
-        completion(true, "")
+//        completion(true, "")
     }
     
     public func getPathPixelData() -> [String: PathPixelData] {
@@ -46,7 +54,7 @@ public class TJLabsResourceManager {
     private func getSectorServiceFromServer(region: ResourceRegion, sectorId: Int) -> [String] {
         var services = [String]()
         
-        services = [TJLabsService.NAVIGATION.rawValue]
+        services = [TJLabsService.NAVIGATION.rawValue, TJLabsService.MAP.rawValue]
         
         return services
     }
