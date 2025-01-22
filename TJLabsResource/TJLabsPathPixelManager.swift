@@ -2,18 +2,10 @@
 import Foundation
 
 class TJLabsPathPixelManager {
-    var ppDataMap = [String: PathPixelData]()
-    var ppDataLoaded = [String: PathPixelDataIsLoaded]()
+    static var ppDataMap = [String: PathPixelData]()
+    static var ppDataLoaded = [String: PathPixelDataIsLoaded]()
     
     init() { }
-    
-    func getPathPixelData() -> [String: PathPixelData] {
-        return self.ppDataMap
-    }
-    
-    func getPathPixelDataIsLoaded() -> [String: PathPixelDataIsLoaded] {
-        return self.ppDataLoaded
-    }
     
     func loadPathPixel(sectorId: Int, completion: @escaping (Bool, String) -> Void) {
         postUserPath(input: InputSector(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
@@ -28,8 +20,8 @@ class TJLabsPathPixelManager {
                                 // Cache에서 파일 URL 가져오기 성공
                                 do {
                                     let contents = try String(contentsOf: fileUrlFromCache)
-                                    self.ppDataMap[key] = self.parsePathPixelData(data: contents)
-                                    self.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
+                                    TJLabsPathPixelManager.ppDataMap[key] = self.parsePathPixelData(data: contents)
+                                    TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                                 } catch {
                                     print("(TJLabsResources) Error : Reading Path-Pixel File \(key)")
                                     updatePathPixel(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
@@ -60,15 +52,15 @@ class TJLabsPathPixelManager {
             if error == nil {
                 do {
                     let contents = try String(contentsOf: url!)
-                    self.ppDataMap[key] = self.parsePathPixelData(data: contents)
-                    self.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
+                    TJLabsPathPixelManager.ppDataMap[key] = self.parsePathPixelData(data: contents)
+                    TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                     self.savePathPixelUrlToCache(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                 } catch {
                     print("(TJLabsResources) Error : reading file:", error.localizedDescription)
-                    self.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
+                    TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
                 }
             } else {
-                self.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
+                TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
             }
         })
     }
