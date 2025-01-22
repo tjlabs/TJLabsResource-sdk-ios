@@ -5,6 +5,12 @@ public enum ResourceRegion {
     case KOREA, US, CANADA
 }
 
+public enum TJLabsService: String {
+    case NAVIGATION = "jupiter"
+    case MAP = "map"
+    case CHAT = "chat"
+}
+
 public struct PathPixelData {
     public var roadType: [Int] = []
     public var nodeNumber: [Int] = []
