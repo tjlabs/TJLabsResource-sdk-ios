@@ -6,11 +6,11 @@ public class TJLabsResourceManager {
     
     let pathPixelManager = TJLabsPathPixelManager()
 
-    init() { }
+    public init() { }
     
     // MARK: - Public Methods
-    public func updateResources(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, String) -> Void) {
-        TJLabsResourceNetworkConstants.setServerURL(region: region)
+    public func loadResources(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, String) -> Void) {
+        self.setRegion(region: region)
         let sectorServices = getSectorServiceFromServer(region: region, sectorId: sectorId)
         var loadedServices = [String]()
         for service in sectorServices {
@@ -57,5 +57,11 @@ public class TJLabsResourceManager {
         services = [TJLabsService.NAVIGATION.rawValue, TJLabsService.MAP.rawValue]
         
         return services
+    }
+    
+    private func setRegion(region: ResourceRegion) {
+        TJLabsResourceNetworkConstants.setServerURL(region: region)
+        TJLabsFileDownloader.shared.setRegion(region: region)
+        pathPixelManager.setRegion(region: region)
     }
 }

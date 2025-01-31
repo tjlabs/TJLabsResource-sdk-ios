@@ -5,7 +5,13 @@ class TJLabsPathPixelManager {
     static var ppDataMap = [String: PathPixelData]()
     static var ppDataLoaded = [String: PathPixelDataIsLoaded]()
     
+    var region: ResourceRegion = .KOREA
+    
     init() { }
+    
+    func setRegion(region: ResourceRegion) {
+        self.region = region
+    }
     
     func loadPathPixel(sectorId: Int, completion: @escaping (Bool, String) -> Void) {
         postUserPath(input: InputSector(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
@@ -68,7 +74,7 @@ class TJLabsPathPixelManager {
     func loadPathPixelFileUrlFromCache(key: String) -> URL? {
         do {
             let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let savedURL = documentsURL.appendingPathComponent("\(key).csv")
+            let savedURL = documentsURL.appendingPathComponent("\(self.region.rawValue)/\(key).csv")
             
             if FileManager.default.fileExists(atPath: savedURL.path) {
                 print("(TJLabsResources) Info : Path-Pixel \(key).csv exists")
@@ -169,11 +175,11 @@ class TJLabsPathPixelManager {
                 let scaleString = lineData[4]
                 
                 if !xString.isEmpty && !yString.isEmpty {
-                    roadType.append(Int(Double(lineData[0])!))
-                    nodeNumber.append(Int(Double(lineData[1])!))
-                    roadX.append(Double(lineData[2])!)
-                    roadY.append(Double(lineData[3])!)
-                    roadScale.append(Double(lineData[4])!)
+                    roadType.append(Int(Double(typeString)!))
+                    nodeNumber.append(Int(Double(nodeString)!))
+                    roadX.append(Double(xString)!)
+                    roadY.append(Double(yString)!)
+                    roadScale.append(Double(scaleString)!)
                     
                     let pattern = "\\[[^\\]]+\\]"
                     guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
