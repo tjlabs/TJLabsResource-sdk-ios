@@ -21,13 +21,12 @@ public class TJLabsResourceNetworkConstants {
         switch region {
         case .KOREA:
             REGION_PREFIX = "ap-northeast-2."
-            REGION_NAME = "Korea"
         case .CANADA:
             REGION_PREFIX = "ca-central-1."
-            REGION_NAME = "Canada"
-        case .US:
+        case .US_EAST:
             REGION_PREFIX = "us-east-1."
-            REGION_NAME = "US"
+        default:
+            REGION_PREFIX = ""
         }
         
         USER_URL = HTTP_PREFIX + REGION_PREFIX + "user" + JUPITER_SUFFIX
