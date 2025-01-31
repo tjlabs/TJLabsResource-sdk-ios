@@ -4,14 +4,15 @@ import Foundation
 public class TJLabsResourceNetworkConstants {
     static let TIMEOUT_VALUE_PUT: TimeInterval = 5.0
     
+    // MARK: - VERSION
     static let USER_PATHPIXEL_SERVER_VERSION = "2024-11-14"
     
+    // MARK: - PREFIX & SUFFIX
     private static let HTTP_PREFIX = "https://"
     private static let JUPITER_SUFFIX = ".jupiter.tjlabs.dev"
-    
     private(set) static var REGION_PREFIX = "ap-northeast-2."
-    private(set) static var REGION_NAME = "Korea"
     
+    // MARK: - SERVER URL
     private(set) static var USER_URL = HTTP_PREFIX + REGION_PREFIX + "user" + JUPITER_SUFFIX
     private(set) static var IMAGE_URL = HTTP_PREFIX + REGION_PREFIX + "img" + JUPITER_SUFFIX
     private(set) static var CSV_URL = HTTP_PREFIX + REGION_PREFIX + "csv" + JUPITER_SUFFIX
