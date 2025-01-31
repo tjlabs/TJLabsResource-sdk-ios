@@ -1,8 +1,10 @@
 
 import Foundation
 
-public enum ResourceRegion {
-    case KOREA, US, CANADA
+public enum ResourceRegion: String {
+    case KOREA = "Korea"
+    case CANADA = "Canada"
+    case US_EAST = "US-East"
 }
 
 public enum TJLabsService: String {
