@@ -7,12 +7,6 @@ public enum ResourceRegion: String {
     case US_EAST = "US_EAST"
 }
 
-public enum TJLabsService: String {
-    case NAVIGATION = "jupiter"
-    case MAP = "map"
-    case CHAT = "chat"
-}
-
 public struct PathPixelData {
     public var roadType: [Int] = []
     public var nodeNumber: [Int] = []
