@@ -2,6 +2,8 @@
 import Foundation
 
 class TJLabsPathPixelManager {
+    static var isPerformed: Bool = false
+    
     static var ppDataMap = [String: PathPixelData]()
     static var ppDataLoaded = [String: PathPixelDataIsLoaded]()
     
