@@ -29,7 +29,6 @@ class TJLabsPathPixelManager {
                                     TJLabsPathPixelManager.ppDataMap[key] = self.parsePathPixelData(data: contents)
                                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                                 } catch {
-                                    print("(TJLabsResources) Error : Reading Path-Pixel File \(key)")
                                     updatePathPixel(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                                 }
                             } else {
@@ -45,9 +44,9 @@ class TJLabsPathPixelManager {
                         updatePathPixel(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                     }
                 }
-                completion(true, "(TJLabsResources) Success : loadPathPixel")
+                completion(true, "(TJLabsResource) Success : loadPathPixel")
             } else {
-                completion(false, "(TJLabsResources) Fail : loadPathPixel")
+                completion(false, "(TJLabsResource) Fail : loadPathPixel")
             }
         })
     }
@@ -62,7 +61,6 @@ class TJLabsPathPixelManager {
                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                     self.savePathPixelUrlToCache(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                 } catch {
-                    print("(TJLabsResources) Error : reading file:", error.localizedDescription)
                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
                 }
             } else {
@@ -77,7 +75,7 @@ class TJLabsPathPixelManager {
             let savedURL = documentsURL.appendingPathComponent("\(self.region.rawValue)/\(key).csv")
             
             if FileManager.default.fileExists(atPath: savedURL.path) {
-                print("(TJLabsResources) Info : Path-Pixel \(key).csv exists")
+                print("(TJLabsResource) Info : Path-Pixel \(key).csv exists")
                 return savedURL
             } else {
                 return nil
@@ -97,7 +95,7 @@ class TJLabsPathPixelManager {
     }
     
     func savePathPixelUrlToCache(key: String, pathPixelUrlFromServer: String) {
-        print("(TJLabsResources) Info : save \(key) Path-Pixel URL \(pathPixelUrlFromServer)")
+        print("(TJLabsResource) Info : save \(key) Path-Pixel URL \(pathPixelUrlFromServer)")
         do {
             let key: String = "TJLabsPathPixelURL_\(key)"
             UserDefaults.standard.set(pathPixelUrlFromServer, forKey: key)
@@ -121,16 +119,16 @@ class TJLabsPathPixelManager {
                         
                         // Path-Pixel URL 저장
                         pathPixelURL[key] = ppURL
-                        print("(TJLabsResources) Info : \(key) PP URL = \(ppURL)")
+                        print("(TJLabsResource) Info : \(key) PP URL = \(ppURL)")
                     }
-                    let msg = "(TJLabsResources) Success : Load Sector Info // Path"
+                    let msg = "(TJLabsResource) Success : Load Sector Info // Path"
                     completion(true, msg, pathPixelURL)
                 } else {
-                    let msg = "(TJLabsResources) Error : Load Sector Info // Path \(statusCode)"
+                    let msg = "(TJLabsResource) Error : Load Sector Info // Path \(statusCode)"
                     completion(false, msg, pathPixelURL)
                 }
             } else {
-                let msg = "(TJLabsResources) Error : Load Sector Info // Path \(statusCode)"
+                let msg = "(TJLabsResource) Error : Load Sector Info // Path \(statusCode)"
                 completion(false, msg, pathPixelURL)
             }
         })

@@ -18,15 +18,17 @@ public class TJLabsResourceManager {
             switch (service) {
             case TJLabsService.NAVIGATION.rawValue:
                 pathPixelManager.loadPathPixel(sectorId: sectorId, completion: { isSuccess, msg in
-                    completion(isSuccess, msg)
+//                    completion(isSuccess, msg)
+                    print("(TJLabsResource) loadResources (NAVIGATION) : \(isSuccess) , \(msg)")
                 })
             case TJLabsService.MAP.rawValue:
                 if !loadedServices.contains(TJLabsService.NAVIGATION.rawValue) {
                     pathPixelManager.loadPathPixel(sectorId: sectorId, completion: { isSuccess, msg in
-                        completion(isSuccess, msg)
+//                        completion(isSuccess, msg)
+                        print("(TJLabsResource) loadResources (MAP) : \(isSuccess) , \(msg)")
                     })
                 } else {
-                    completion(true, "")
+//                    completion(true, "")
                 }
             case TJLabsService.CHAT.rawValue:
                 print("wow")
@@ -35,7 +37,7 @@ public class TJLabsResourceManager {
             }
         }
         
-//        completion(true, "")
+        completion(true, "")
     }
     
     public func getPathPixelData() -> [String: PathPixelData] {

@@ -14,11 +14,19 @@ public class TJLabsFileDownloader {
             
             do {
                 let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                let savedURL = documentsURL.appendingPathComponent("\(self.region.rawValue)/\(fname).csv")
+
+                let regionDirectory = documentsURL.appendingPathComponent(self.region.rawValue)
+                if !FileManager.default.fileExists(atPath: regionDirectory.path) {
+                    try FileManager.default.createDirectory(at: regionDirectory, withIntermediateDirectories: true, attributes: nil)
+                }
                 
-                if FileManager.default.fileExists(atPath: savedURL.path) { try FileManager.default.removeItem(at: savedURL) }
+                let savedURL = regionDirectory.appendingPathComponent("\(fname).csv")
+
+                if FileManager.default.fileExists(atPath: savedURL.path) {
+                    try FileManager.default.removeItem(at: savedURL)
+                }
+                
                 try FileManager.default.moveItem(at: tempLocalURL, to: savedURL)
-                
                 completion(savedURL, nil)
             } catch {
                 completion(nil, error)
