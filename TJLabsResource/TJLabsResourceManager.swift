@@ -40,9 +40,7 @@ public class TJLabsResourceManager {
     private func loadPathPixel(region: ResourceRegion, sectorId: Int) {
         if !TJLabsPathPixelManager.isPerformed {
             TJLabsPathPixelManager.isPerformed = true
-            pathPixelManager.loadPathPixel(sectorId: sectorId, completion: { isSuccess, msg in
-                print("(TJLabsResource) loadResources (NAVIGATION) : \(isSuccess) , \(msg)")
-            })
+            pathPixelManager.loadPathPixel(sectorId: sectorId)
         } else {
             print("(TJLabsResource) Info : loadPathPixel already performed")
         }

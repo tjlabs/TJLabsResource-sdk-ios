@@ -15,7 +15,7 @@ class TJLabsPathPixelManager {
         self.region = region
     }
     
-    func loadPathPixel(sectorId: Int, completion: @escaping (Bool, String) -> Void) {
+    func loadPathPixel(sectorId: Int) {
         postUserPath(input: InputSector(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
             if isSuccess {
                 // 성공
@@ -46,9 +46,9 @@ class TJLabsPathPixelManager {
                         updatePathPixel(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                     }
                 }
-                completion(true, "(TJLabsResource) Success : loadPathPixel")
+                print("(TJLabsResource) Success : loadPathPixel")
             } else {
-                completion(false, "(TJLabsResource) Fail : loadPathPixel")
+                print("(TJLabsResource) Fail : loadPathPixel")
             }
         })
     }
