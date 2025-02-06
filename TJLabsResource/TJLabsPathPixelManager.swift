@@ -16,7 +16,7 @@ class TJLabsPathPixelManager {
     }
     
     func loadPathPixel(sectorId: Int) {
-        postUserPath(input: InputSector(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
+        postUserPath(input: SectorIdOsInput(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
             if isSuccess {
                 // 성공
                 for (key, value) in pathPixelURL {
@@ -104,7 +104,7 @@ class TJLabsPathPixelManager {
         }
     }
     
-    func postUserPath(input: InputSector, completion: @escaping (Bool, String, [String: String]) -> Void) {
+    func postUserPath(input: SectorIdOsInput, completion: @escaping (Bool, String, [String: String]) -> Void) {
        var pathPixelURL = [String: String]()
         let pathURL = TJLabsResourceNetworkConstants.getUserPathPixelURL()
         TJLabsResourceNetworkManager.shared.postPathPixel(url: pathURL, input: input, completion: { [self] statusCode, returnedString, input in
@@ -137,17 +137,17 @@ class TJLabsPathPixelManager {
     }
     
     // MARK: - Decode FLT output
-    func decodeOutputPathPixel(jsonString: String) -> (Bool, OutputPathPixel) {
+    func decodeOutputPathPixel(jsonString: String) -> (Bool, PathPixelOutputList) {
         guard let jsonData = jsonString.data(using: .utf8) else {
-            return (false, OutputPathPixel(path_pixel_list: []))
+            return (false, PathPixelOutputList(path_pixel_list: []))
         }
         
         do {
-            let decodedData = try JSONDecoder().decode(OutputPathPixel.self, from: jsonData)
+            let decodedData = try JSONDecoder().decode(PathPixelOutputList.self, from: jsonData)
             return (true, decodedData)
         } catch {
             print("Error decoding JSON: \(error)")
-            return (false, OutputPathPixel(path_pixel_list: []))
+            return (false, PathPixelOutputList(path_pixel_list: []))
         }
     }
     
