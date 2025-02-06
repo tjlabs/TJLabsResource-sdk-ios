@@ -4,10 +4,14 @@ import Foundation
 class TJLabsResourceNetworkManager {
     static let shared = TJLabsResourceNetworkManager()
     
+    private let commonSessions: [URLSession]
+    private var commonSessionCount = 0
+    
     private let pathSessions: [URLSession]
     private var pathSessionCount = 0
     
     private init() {
+        self.commonSessions = TJLabsResourceNetworkManager.createSessionPool()
         self.pathSessions = TJLabsResourceNetworkManager.createSessionPool()
     }
     
@@ -75,7 +79,19 @@ class TJLabsResourceNetworkManager {
         }.resume()
     }
     
-    func postPathPixel(url: String, input: InputSector, completion: @escaping (Int, String, InputSector) -> Void) {
+    func postBuildingLevel(url: String, input: SectorIdInput, completion: @escaping (Int, String, SectorIdInput) -> Void) {
+        guard let body = encodeJson(input),
+              let request = makeRequest(url: url, body: body) else {
+            DispatchQueue.main.async { completion(406, "Invalid URL or failed to encode JSON", input) }
+            return
+        }
+
+        let session = commonSessions[commonSessionCount % commonSessions.count]
+        commonSessionCount += 1
+        performRequest(request: request, session: session, input: input, completion: completion)
+    }
+    
+    func postPathPixel(url: String, input: SectorIdOsInput, completion: @escaping (Int, String, SectorIdOsInput) -> Void) {
         guard let body = encodeJson(input),
               let request = makeRequest(url: url, body: body) else {
             DispatchQueue.main.async { completion(406, "Invalid URL or failed to encode JSON", input) }
@@ -84,6 +100,18 @@ class TJLabsResourceNetworkManager {
 
         let session = pathSessions[pathSessionCount % pathSessions.count]
         pathSessionCount += 1
+        performRequest(request: request, session: session, input: input, completion: completion)
+    }
+    
+    func postScaleOffset(url: String, input: SectorIdOsInput, completion: @escaping (Int, String, SectorIdOsInput) -> Void) {
+        guard let body = encodeJson(input),
+              let request = makeRequest(url: url, body: body) else {
+            DispatchQueue.main.async { completion(406, "Invalid URL or failed to encode JSON", input) }
+            return
+        }
+
+        let session = commonSessions[commonSessionCount % commonSessions.count]
+        commonSessionCount += 1
         performRequest(request: request, session: session, input: input, completion: completion)
     }
 }
