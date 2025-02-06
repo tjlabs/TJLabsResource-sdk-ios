@@ -35,7 +35,16 @@ public struct PathPixelDataIsLoaded {
     }
 }
 
-struct InputSector: Codable {
+// MARK: - POST Input
+struct SectorIdInput: Codable {
+    var sector_id: Int = 0
+    
+    init(sector_id: Int) {
+        self.sector_id = sector_id
+    }
+}
+
+struct SectorIdOsInput: Codable {
     var sector_id: Int = 0
     var operating_system: String = "iOS"
     
@@ -45,12 +54,40 @@ struct InputSector: Codable {
     }
 }
 
-struct PathPixel: Codable {
+// MARK: - POST Output
+// MARK: - PathPixel
+struct PathPixelOutput: Codable {
     let building_name: String
     let level_name: String
     let url: String
 }
 
-struct OutputPathPixel: Codable {
-    let path_pixel_list: [PathPixel]
+struct PathPixelOutputList: Codable {
+    let path_pixel_list: [PathPixelOutput]
+}
+
+// MARK: - Building Level
+struct LevelOuput: Codable {
+    let building_name: String
+    let level_name: String
+}
+
+struct LevelOutputList: Codable {
+    let level_list: [LevelOuput]
+}
+
+// MARK: - Scale Offset
+struct ScaleOutputList: Codable {
+    let scale_list: [ScaleOutput]
+}
+
+struct ScaleOutput: Codable {
+    let building_name: String
+    let level_name: String
+    let image_scale: [Double]
+}
+
+// MARK: - Protocol
+public protocol TJLabsResourceManagerDelegate: AnyObject {
+    func onBuildingLevelData(_ manager: TJLabsResourceManager, buildingLevelData: [String: [String]])
 }
