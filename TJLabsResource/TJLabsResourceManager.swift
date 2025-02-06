@@ -1,19 +1,38 @@
 
 import Foundation
 
-public class TJLabsResourceManager {
-    public static let shared = TJLabsResourceManager()
+public class TJLabsResourceManager: ScaleOffsetDelegate {
+    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool) {
+        if isOn {
+            
+        } else {
+            // Error
+            TJLabsScaleOffsetManager.isPerformed = false
+        }
+    }
     
+    public static let shared = TJLabsResourceManager()
+    public weak var delegate: TJLabsResourceManagerDelegate?
+    
+    let buildingLevelManager = TJLabsBuildingLevelManager()
     let pathPixelManager = TJLabsPathPixelManager()
+    let imageManager = TJLabsImageManager()
+    let scaleOffsetManager = TJLabsScaleOffsetManager()
 
-    public init() { }
+    public init() {
+        scaleOffsetManager.delegate = self
+    }
     
     // MARK: - Public Methods
     public func loadMapResource(region: ResourceRegion, sectorId: Int) {
         self.loadPathPixel(region: region, sectorId: sectorId)
-        self.loadImage(region: region, sectorId: sectorId)
         self.loadScaleOffset(region: region, sectorId: sectorId)
         self.loadUnit(region: region, sectorId: sectorId)
+        loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, buildingLevelData in
+            if isSuccess {
+                self.loadImage(region: region, sectorId: sectorId)
+            }
+        })
     }
     
     public func loadJupiterResource(region: ResourceRegion, sectorId: Int) {
@@ -22,12 +41,20 @@ public class TJLabsResourceManager {
     }
     
     // MARK: - Public Get Methods
+    public func getBuildingLevelData() -> [Int: [String: [String]]] {
+        return TJLabsBuildingLevelManager.buildingLevelDataMap
+    }
+    
     public func getPathPixelData() -> [String: PathPixelData] {
         return TJLabsPathPixelManager.ppDataMap
     }
     
     public func getPathPixelDataIsLoaded() -> [String: PathPixelDataIsLoaded] {
         return TJLabsPathPixelManager.ppDataLoaded
+    }
+    
+    public func getScaleOffset() -> [String: [Double]] {
+        return TJLabsScaleOffsetManager.scaleOffsetDataMap
     }
     
     // MARK: - Public Update Methods
@@ -37,6 +64,15 @@ public class TJLabsResourceManager {
     }
     
     // MARK: - Private Methods
+    private func loadBuildingLevel(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
+        buildingLevelManager.loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, buildingLevelData in
+            if isSuccess {
+                delegate?.onBuildingLevelData(self, buildingLevelData: buildingLevelData)
+            }
+            completion(isSuccess, buildingLevelData)
+        })
+    }
+    
     private func loadPathPixel(region: ResourceRegion, sectorId: Int) {
         if !TJLabsPathPixelManager.isPerformed {
             TJLabsPathPixelManager.isPerformed = true
@@ -51,7 +87,12 @@ public class TJLabsResourceManager {
     }
     
     private func loadScaleOffset(region: ResourceRegion, sectorId: Int) {
-        
+        if !TJLabsScaleOffsetManager.isPerformed {
+            TJLabsScaleOffsetManager.isPerformed = true
+            scaleOffsetManager.loadScaleOffset(region: region, sectorId: sectorId)
+        } else {
+            print("(TJLabsResource) Info : loadScaleOffset already performed")
+        }
     }
     
     private func loadUnit(region: ResourceRegion, sectorId: Int) {
@@ -66,5 +107,6 @@ public class TJLabsResourceManager {
         TJLabsResourceNetworkConstants.setServerURL(region: region)
         TJLabsFileDownloader.shared.setRegion(region: region)
         pathPixelManager.setRegion(region: region)
+        buildingLevelManager.setRegion(region: region)
     }
 }
