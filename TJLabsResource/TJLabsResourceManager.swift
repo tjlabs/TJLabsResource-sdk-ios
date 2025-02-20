@@ -137,6 +137,7 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
         TJLabsFileDownloader.shared.setRegion(region: region)
         buildingLevelManager.setRegion(region: region)
         imageManager.setRegion(region: region)
+        scaleOffsetManager.setRegion(region: region)
         pathPixelManager.setRegion(region: region)
         entranceManager.setRegion(region: region)
     }
