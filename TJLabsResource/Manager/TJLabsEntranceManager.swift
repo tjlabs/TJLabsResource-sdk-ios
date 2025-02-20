@@ -1,6 +1,10 @@
 
 import Foundation
 
+protocol EntranceDelegate: AnyObject {
+    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String)
+    func onEntranceError(_ manager: TJLabsEntranceManager)
+}
 
 class TJLabsEntranceManager {
     
@@ -9,6 +13,7 @@ class TJLabsEntranceManager {
     static var entranceRouteDataMap = [String: EntranceRouteData]()
     static var entranceRouteDataLoaded = [String: EntranceRouteDataIsLoaded]()
     static var entranceOuterWards = [String]()
+    weak var delegate: EntranceDelegate?
     
     var region: ResourceRegion = .KOREA
     
@@ -35,6 +40,7 @@ class TJLabsEntranceManager {
                                     let entranceRouteData = EntranceRouteData(routeLevel: parsedData.0, route: parsedData.1)
                                     TJLabsEntranceManager.entranceRouteDataMap[key] = entranceRouteData
                                     TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: true, URL: entranceRouteUrlFromServer)
+                                    delegate?.onEntranceData(self, isOn: true, entranceKey: key)
                                 } catch {
                                     updateEntranceRoute(key: key, entranceRouteUrlFromServer: entranceRouteUrlFromServer)
                                 }
@@ -53,6 +59,7 @@ class TJLabsEntranceManager {
                 }
                 print("(TJLabsResource) Success : loadEntrance")
             } else {
+                delegate?.onEntranceError(self)
                 print("(TJLabsResource) Fail : loadEntrance")
             }
         })
@@ -69,11 +76,14 @@ class TJLabsEntranceManager {
                     TJLabsEntranceManager.entranceRouteDataMap[key] = entranceRouteData
                     TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: true, URL: entranceRouteUrlFromServer)
                     self.saveEntranceRouteUrlToCache(key: key, entranceRouteUrlFromServer: entranceRouteUrlFromServer)
+                    delegate?.onEntranceData(self, isOn: true, entranceKey: key)
                 } catch {
                     TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: false, URL: entranceRouteUrlFromServer)
+                    delegate?.onEntranceData(self, isOn: false, entranceKey: key)
                 }
             } else {
                 TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: false, URL: entranceRouteUrlFromServer)
+                delegate?.onEntranceData(self, isOn: false, entranceKey: key)
             }
         })
     }
