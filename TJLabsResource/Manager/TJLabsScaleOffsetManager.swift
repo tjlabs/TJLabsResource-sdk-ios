@@ -2,7 +2,8 @@
 import Foundation
 
 protocol ScaleOffsetDelegate: AnyObject {
-    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool)
+    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String)
+    func onScaleError(_ manager: TJLabsScaleOffsetManager)
 }
 
 class TJLabsScaleOffsetManager {
@@ -27,12 +28,12 @@ class TJLabsScaleOffsetManager {
                     updateScaleOffset(sectorId: sectorId, scaleOutputList: decodedInfo.1)
                 } else {
                     print("(TJLabsResource) Fail : error in decoding loadScaleOffset")
-                    delegate?.onScaleOffsetData(self, isOn: false)
+                    delegate?.onScaleError(self)
                 }
             } else {
                 // Fail
                 print("(TJLabsResource) Fail : loadScaleOffset")
-                delegate?.onScaleOffsetData(self, isOn: false)
+                delegate?.onScaleError(self)
             }
         })
     }
@@ -45,8 +46,8 @@ class TJLabsScaleOffsetManager {
             
             let scaleKey = "scale_\(sectorId)_\(buildingName)_\(levelName)"
             TJLabsScaleOffsetManager.scaleOffsetDataMap[scaleKey] = element.image_scale
+            delegate?.onScaleOffsetData(self, isOn: true, scaleKey: scaleKey)
         }
-        delegate?.onScaleOffsetData(self, isOn: true)
     }
     
     // MARK: - Decoding
