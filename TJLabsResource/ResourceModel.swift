@@ -153,6 +153,19 @@ struct ScaleOutput: Codable {
 }
 
 // MARK: - Protocol
+public enum ResourceError {
+    case PathPixel
+    case BuildingLevel
+    case Image
+    case Scale
+    case Entrance
+}
+
 public protocol TJLabsResourceManagerDelegate: AnyObject {
-    
+    func onBuildingLevelData(_ manager: TJLabsResourceManager, isOn: Bool, buildingLevelData: [String: [String]])
+    func onPathPixelData(_ manager: TJLabsResourceManager, isOn: Bool, pathPixelKey: String)
+    func onBuildingLevelImageData(_ manager: TJLabsResourceManager, isOn: Bool, imageKey: String)
+    func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, scaleKey: String)
+    func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, entranceKey: String)
+    func onError(_ manager: TJLabsResourceManager, error: ResourceError)
 }
