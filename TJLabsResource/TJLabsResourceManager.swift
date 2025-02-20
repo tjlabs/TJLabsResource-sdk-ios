@@ -26,6 +26,7 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
     
     let buildingLevelManager = TJLabsBuildingLevelManager()
     let pathPixelManager = TJLabsPathPixelManager()
+    let entranceManager = TJLabsEntranceManager()
     let imageManager = TJLabsImageManager()
     let scaleOffsetManager = TJLabsScaleOffsetManager()
     
@@ -44,7 +45,7 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
     
     public func loadJupiterResource(region: ResourceRegion, sectorId: Int) {
         self.loadPathPixel(region: region, sectorId: sectorId)
-        self.loadRouteTrack(region: region, sectorId: sectorId)
+        self.loadEntrance(region: region, sectorId: sectorId)
     }
     
     // MARK: - Public Get Methods
@@ -62,6 +63,26 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
     
     public func getScaleOffset() -> [String: [Double]] {
         return TJLabsScaleOffsetManager.scaleOffsetDataMap
+    }
+    
+    public func getEntranceNumbers() -> Int {
+        return TJLabsEntranceManager.entranceNumbers
+    }
+    
+    public func getEntranceData() -> [String: EntranceData] {
+        return TJLabsEntranceManager.entranceDataMap
+    }
+    
+    public func getEntranceRouteData() -> [String: EntranceRouteData] {
+        return TJLabsEntranceManager.entranceRouteDataMap
+    }
+    
+    public func getEntranceRouteDataIsLoaded() -> [String: EntranceRouteDataIsLoaded] {
+        return TJLabsEntranceManager.entranceRouteDataLoaded
+    }
+    
+    public func getEntranceOuterwards() -> [String] {
+        return TJLabsEntranceManager.entranceOuterWards
     }
     
     // MARK: - Public Update Methods
@@ -107,8 +128,8 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
         
     }
     
-    private func loadRouteTrack(region: ResourceRegion, sectorId: Int) {
-        
+    private func loadEntrance(region: ResourceRegion, sectorId: Int) {
+        entranceManager.loadEntrance(sectorId: sectorId)
     }
     
     private func setRegion(region: ResourceRegion) {
@@ -117,5 +138,6 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
         buildingLevelManager.setRegion(region: region)
         imageManager.setRegion(region: region)
         pathPixelManager.setRegion(region: region)
+        entranceManager.setRegion(region: region)
     }
 }
