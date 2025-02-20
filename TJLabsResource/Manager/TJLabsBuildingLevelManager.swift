@@ -1,8 +1,14 @@
 
 import Foundation
 
+protocol BuildingLevelDelegate: AnyObject {
+    func onBuildingLevelData(_ manager: TJLabsBuildingLevelManager, isOn: Bool, buildingLevelData: [String: [String]])
+    func onBuildingLevelError(_ manager: TJLabsBuildingLevelManager)
+}
+
 class TJLabsBuildingLevelManager {
     static var buildingLevelDataMap = [Int: [String: [String]]]()
+    weak var delegate: BuildingLevelDelegate?
     
     var region: ResourceRegion = .KOREA
     
@@ -27,15 +33,18 @@ class TJLabsBuildingLevelManager {
                         let buildingLevelInfo = makeBuildingLevelInfo(sector_id: sectorId, outputLevel: decodedInfo.1)
                         result = buildingLevelInfo
                         setBuildingLevelDataMap(sectorId: sectorId, buildingLevelInfo: buildingLevelInfo)
+                        delegate?.onBuildingLevelData(self, isOn: true, buildingLevelData: buildingLevelInfo)
                         print("(TJLabsResource) Success : loadBuildingLevel")
                         completion(true, result)
                     } else {
                         print("(TJLabsResource) Fail : error in decoding loadBuildingLevel")
+                        delegate?.onBuildingLevelError(self)
                         completion(false, result)
                     }
                 } else {
                     // Fail
                     print("(TJLabsResource) Fail : loadBuildingLevel")
+                    delegate?.onBuildingLevelError(self)
                     completion(false, result)
                 }
             })
