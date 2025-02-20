@@ -44,7 +44,7 @@ class TJLabsBuildingLevelManager {
     
     func setBuildingLevelDataMap(sectorId: Int, buildingLevelInfo: [String: [String]]) {
         TJLabsBuildingLevelManager.buildingLevelDataMap[sectorId] = TJLabsBuildingLevelManager.buildingLevelDataMap[sectorId] ?? buildingLevelInfo
-        print("(TJLabsResourece) : buildingLevelDataMap = \(TJLabsBuildingLevelManager.buildingLevelDataMap)")
+        print("(TJLabsResource) Info : buildingLevelDataMap = \(TJLabsBuildingLevelManager.buildingLevelDataMap)")
     }
     
     private func makeBuildingLevelInfo(sector_id: Int, outputLevel: LevelOutputList) -> [String: [String]] {
