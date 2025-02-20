@@ -103,6 +103,18 @@ class TJLabsResourceNetworkManager {
         performRequest(request: request, session: session, input: input, completion: completion)
     }
     
+    func postEntranceRoute(url: String, input: SectorIdOsInput, completion: @escaping (Int, String, SectorIdOsInput) -> Void) {
+        guard let body = encodeJson(input),
+              let request = makeRequest(url: url, body: body) else {
+            DispatchQueue.main.async { completion(406, "Invalid URL or failed to encode JSON", input) }
+            return
+        }
+
+        let session = pathSessions[pathSessionCount % pathSessions.count]
+        pathSessionCount += 1
+        performRequest(request: request, session: session, input: input, completion: completion)
+    }
+    
     func postScaleOffset(url: String, input: SectorIdOsInput, completion: @escaping (Int, String, SectorIdOsInput) -> Void) {
         guard let body = encodeJson(input),
               let request = makeRequest(url: url, body: body) else {
