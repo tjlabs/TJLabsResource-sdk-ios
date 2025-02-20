@@ -1,13 +1,24 @@
 
 import Foundation
+import UIKit
 
-public class TJLabsResourceManager: ScaleOffsetDelegate {
+public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDelegate {
+    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String) {
+        print("(TJLabsResource) Info : onBuildingLevelImageData // isOn = \(isOn) , imageKey = \(imageKey)")
+//        if isOn {
+//            
+//        } else {
+//            
+//        }
+    }
+    
     func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool) {
-        if isOn {
-            // TODO
-        } else {
-            TJLabsScaleOffsetManager.isPerformed = false
-        }
+        print("(TJLabsResource) Info : onScaleOffsetData // isOn = \(isOn)")
+//        if isOn {
+//            // TODO
+//        } else {
+//            
+//        }
     }
     
     public static let shared = TJLabsResourceManager()
@@ -20,6 +31,7 @@ public class TJLabsResourceManager: ScaleOffsetDelegate {
     
     public init() {
         scaleOffsetManager.delegate = self
+        imageManager.delegate = self
     }
     
     // MARK: - Public Methods
@@ -59,15 +71,6 @@ public class TJLabsResourceManager: ScaleOffsetDelegate {
     }
     
     // MARK: - Private Methods
-    private func loadBuildingLevel(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
-        buildingLevelManager.loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, buildingLevelData in
-            if isSuccess {
-                delegate?.onBuildingLevelData(self, buildingLevelData: buildingLevelData)
-            }
-            completion(isSuccess, buildingLevelData)
-        })
-    }
-    
     private func loadPathPixel(region: ResourceRegion, sectorId: Int) {
         if !TJLabsPathPixelManager.isPerformed {
             TJLabsPathPixelManager.isPerformed = true
@@ -77,8 +80,23 @@ public class TJLabsResourceManager: ScaleOffsetDelegate {
         }
     }
     
-    private func loadImage(region: ResourceRegion, sectorId: Int) {
+    private func loadBuildingLevel(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
+        if let buildingLevelData = TJLabsBuildingLevelManager.buildingLevelDataMap[sectorId], !buildingLevelData.isEmpty {
+            completion(true, buildingLevelData)
+            return
+        }
         
+        buildingLevelManager.loadBuildingLevel(region: region, sectorId: sectorId, completion: completion)
+    }
+    
+    private func loadImage(region: ResourceRegion, sectorId: Int) {
+        self.loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, buildingLevelData in
+            if isSuccess {
+                self.imageManager.loadImage(region: region, sectorId: sectorId, buildingLevelData: buildingLevelData)
+            } else {
+                // Fail
+            }
+        })
     }
     
     private func loadScaleOffset(region: ResourceRegion, sectorId: Int) {
@@ -97,6 +115,7 @@ public class TJLabsResourceManager: ScaleOffsetDelegate {
         TJLabsResourceNetworkConstants.setServerURL(region: region)
         TJLabsFileDownloader.shared.setRegion(region: region)
         buildingLevelManager.setRegion(region: region)
+        imageManager.setRegion(region: region)
         pathPixelManager.setRegion(region: region)
     }
 }
