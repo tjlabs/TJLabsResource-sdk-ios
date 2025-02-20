@@ -2,23 +2,50 @@
 import Foundation
 import UIKit
 
-public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDelegate {
-    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String) {
-        print("(TJLabsResource) Info : onBuildingLevelImageData // isOn = \(isOn) , imageKey = \(imageKey)")
-//        if isOn {
-//            
-//        } else {
-//            
-//        }
+public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, BuildingLevelImageDelegate, ScaleOffsetDelegate, EntranceDelegate {
+    func onBuildingLevelData(_ manager: TJLabsBuildingLevelManager, isOn: Bool, buildingLevelData: [String: [String]]) {
+        delegate?.onBuildingLevelData(self, isOn: isOn, buildingLevelData: buildingLevelData)
+        print("(TJLabsResource) Info : onBuildingLevelData // isOn = \(isOn) , buildingLevelData = \(buildingLevelData)")
     }
     
-    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool) {
-        print("(TJLabsResource) Info : onScaleOffsetData // isOn = \(isOn)")
-//        if isOn {
-//            // TODO
-//        } else {
-//            
-//        }
+    func onBuildingLevelError(_ manager: TJLabsBuildingLevelManager) {
+        delegate?.onError(self, error: .BuildingLevel)
+        print("(TJLabsResource) Info : onBuildingLevelError")
+    }
+    
+    func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String) {
+        delegate?.onPathPixelData(self, isOn: isOn, pathPixelKey: pathPixelKey)
+        print("(TJLabsResource) Info : onPathPixelData // isOn = \(isOn) , pathPixelKey = \(pathPixelKey)")
+    }
+    
+    func onPathPixelError(_ manager: TJLabsPathPixelManager) {
+        delegate?.onError(self, error: .PathPixel)
+        print("(TJLabsResource) Info : onPathPixelError")
+    }
+    
+    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String) {
+        delegate?.onBuildingLevelImageData(self, isOn: isOn, imageKey: imageKey)
+        print("(TJLabsResource) Info : onBuildingLevelImageData // isOn = \(isOn) , imageKey = \(imageKey)")
+    }
+    
+    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String) {
+        delegate?.onScaleOffsetData(self, isOn: isOn, scaleKey: scaleKey)
+        print("(TJLabsResource) Info : onScaleOffsetData // isOn = \(isOn) , scaleKey = \(scaleKey)")
+    }
+    
+    func onScaleError(_ manager: TJLabsScaleOffsetManager) {
+        delegate?.onError(self, error: .Scale)
+        print("(TJLabsResource) Info : onScaleError")
+    }
+    
+    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String) {
+        delegate?.onEntranceData(self, isOn: isOn, entranceKey: entranceKey)
+        print("(TJLabsResource) Info : onEntranceData // isOn = \(isOn) , entranceKey = \(entranceKey)")
+    }
+    
+    func onEntranceError(_ manager: TJLabsEntranceManager) {
+        delegate?.onError(self, error: .Entrance)
+        print("(TJLabsResource) Info : onEntranceError")
     }
     
     public static let shared = TJLabsResourceManager()
@@ -31,8 +58,11 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
     let scaleOffsetManager = TJLabsScaleOffsetManager()
     
     public init() {
+        buildingLevelManager.delegate = self
+        pathPixelManager.delegate = self
         scaleOffsetManager.delegate = self
         imageManager.delegate = self
+        entranceManager.delegate = self
     }
     
     // MARK: - Public Methods
@@ -102,11 +132,6 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
     }
     
     private func loadBuildingLevel(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
-        if let buildingLevelData = TJLabsBuildingLevelManager.buildingLevelDataMap[sectorId], !buildingLevelData.isEmpty {
-            completion(true, buildingLevelData)
-            return
-        }
-        
         buildingLevelManager.loadBuildingLevel(region: region, sectorId: sectorId, completion: completion)
     }
     
@@ -114,8 +139,6 @@ public class TJLabsResourceManager: ScaleOffsetDelegate, BuildingLevelImageDeleg
         self.loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, buildingLevelData in
             if isSuccess {
                 self.imageManager.loadImage(region: region, sectorId: sectorId, buildingLevelData: buildingLevelData)
-            } else {
-                // Fail
             }
         })
     }
