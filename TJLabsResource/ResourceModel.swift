@@ -89,5 +89,5 @@ struct ScaleOutput: Codable {
 
 // MARK: - Protocol
 public protocol TJLabsResourceManagerDelegate: AnyObject {
-    func onBuildingLevelData(_ manager: TJLabsResourceManager, buildingLevelData: [String: [String]])
+    
 }

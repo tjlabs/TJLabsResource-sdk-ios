@@ -6,7 +6,6 @@ protocol ScaleOffsetDelegate: AnyObject {
 }
 
 class TJLabsScaleOffsetManager {
-    static var isPerformed: Bool = false
     static var scaleOffsetDataMap = [String: [Double]]()
     weak var delegate: ScaleOffsetDelegate?
     
