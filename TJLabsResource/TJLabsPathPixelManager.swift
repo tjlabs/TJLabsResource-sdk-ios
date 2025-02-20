@@ -16,10 +16,10 @@ class TJLabsPathPixelManager {
     }
     
     func loadPathPixel(sectorId: Int) {
-        postUserPath(input: SectorIdOsInput(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
+        postUserPath(input: SectorIdOsInput(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelUrl in
             if isSuccess {
                 // 성공
-                for (key, value) in pathPixelURL {
+                for (key, value) in pathPixelUrl {
                     let pathPixelUrlFromServer = value
                     if let pathPixelUrlFromCache = loadPathPixelUrlFromCache(key: key) {
                         if pathPixelUrlFromServer == pathPixelUrlFromCache {
@@ -136,7 +136,7 @@ class TJLabsPathPixelManager {
         })
     }
     
-    // MARK: - Decode FLT output
+    // MARK: - Decode Path-Pixel output
     func decodeOutputPathPixel(jsonString: String) -> (Bool, PathPixelOutputList) {
         guard let jsonData = jsonString.data(using: .utf8) else {
             return (false, PathPixelOutputList(path_pixel_list: []))
