@@ -45,6 +45,10 @@ public class TJLabsResourceNetworkConstants {
         return USER_URL
     }
     
+    public static func getImageBaseURL() -> String {
+        return IMAGE_URL
+    }
+    
     // MARK: - Level
     public static func getUserLevelVersion() -> String {
         return USER_LEVEL_SERVER_VERSION
