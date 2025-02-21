@@ -1,11 +1,17 @@
 
 import Foundation
 
+protocol PathPixelDelegate: AnyObject {
+    func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?)
+    func onPathPixelError(_ manager: TJLabsPathPixelManager)
+}
+
 class TJLabsPathPixelManager {
     static var isPerformed: Bool = false
     
     static var ppDataMap = [String: PathPixelData]()
     static var ppDataLoaded = [String: PathPixelDataIsLoaded]()
+    weak var delegate: PathPixelDelegate?
     
     var region: ResourceRegion = .KOREA
     
@@ -16,10 +22,10 @@ class TJLabsPathPixelManager {
     }
     
     func loadPathPixel(sectorId: Int) {
-        postUserPath(input: InputSector(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelURL in
+        postUserPath(input: SectorIdOsInput(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, pathPixelUrl in
             if isSuccess {
                 // 성공
-                for (key, value) in pathPixelURL {
+                for (key, value) in pathPixelUrl {
                     let pathPixelUrlFromServer = value
                     if let pathPixelUrlFromCache = loadPathPixelUrlFromCache(key: key) {
                         if pathPixelUrlFromServer == pathPixelUrlFromCache {
@@ -28,8 +34,10 @@ class TJLabsPathPixelManager {
                                 // Cache에서 파일 URL 가져오기 성공
                                 do {
                                     let contents = try String(contentsOf: fileUrlFromCache)
-                                    TJLabsPathPixelManager.ppDataMap[key] = self.parsePathPixelData(data: contents)
+                                    let ppData = self.parsePathPixelData(data: contents)
+                                    TJLabsPathPixelManager.ppDataMap[key] = ppData
                                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
+                                    delegate?.onPathPixelData(self, isOn: true, pathPixelKey: key, data: ppData)
                                 } catch {
                                     updatePathPixel(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                                 }
@@ -48,6 +56,7 @@ class TJLabsPathPixelManager {
                 }
                 print("(TJLabsResource) Success : loadPathPixel")
             } else {
+                delegate?.onPathPixelError(self)
                 print("(TJLabsResource) Fail : loadPathPixel")
             }
         })
@@ -59,14 +68,18 @@ class TJLabsPathPixelManager {
             if error == nil {
                 do {
                     let contents = try String(contentsOf: url!)
-                    TJLabsPathPixelManager.ppDataMap[key] = self.parsePathPixelData(data: contents)
+                    let ppData = self.parsePathPixelData(data: contents)
+                    TJLabsPathPixelManager.ppDataMap[key] = ppData
                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                     self.savePathPixelUrlToCache(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
+                    delegate?.onPathPixelData(self, isOn: true, pathPixelKey: key, data: ppData)
                 } catch {
                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
+                    delegate?.onPathPixelData(self, isOn: false, pathPixelKey: key, data: nil)
                 }
             } else {
                 TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
+                delegate?.onPathPixelData(self, isOn: false, pathPixelKey: key, data: nil)
             }
         })
     }
@@ -104,7 +117,7 @@ class TJLabsPathPixelManager {
         }
     }
     
-    func postUserPath(input: InputSector, completion: @escaping (Bool, String, [String: String]) -> Void) {
+    func postUserPath(input: SectorIdOsInput, completion: @escaping (Bool, String, [String: String]) -> Void) {
        var pathPixelURL = [String: String]()
         let pathURL = TJLabsResourceNetworkConstants.getUserPathPixelURL()
         TJLabsResourceNetworkManager.shared.postPathPixel(url: pathURL, input: input, completion: { [self] statusCode, returnedString, input in
@@ -136,18 +149,18 @@ class TJLabsPathPixelManager {
         })
     }
     
-    // MARK: - Decode FLT output
-    func decodeOutputPathPixel(jsonString: String) -> (Bool, OutputPathPixel) {
+    // MARK: - Decode Path-Pixel output
+    func decodeOutputPathPixel(jsonString: String) -> (Bool, PathPixelOutputList) {
         guard let jsonData = jsonString.data(using: .utf8) else {
-            return (false, OutputPathPixel(path_pixel_list: []))
+            return (false, PathPixelOutputList(path_pixel_list: []))
         }
         
         do {
-            let decodedData = try JSONDecoder().decode(OutputPathPixel.self, from: jsonData)
+            let decodedData = try JSONDecoder().decode(PathPixelOutputList.self, from: jsonData)
             return (true, decodedData)
         } catch {
             print("Error decoding JSON: \(error)")
-            return (false, OutputPathPixel(path_pixel_list: []))
+            return (false, PathPixelOutputList(path_pixel_list: []))
         }
     }
     

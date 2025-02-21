@@ -5,7 +5,12 @@ public class TJLabsResourceNetworkConstants {
     static let TIMEOUT_VALUE_PUT: TimeInterval = 5.0
     
     // MARK: - VERSION
+    static let USER_LEVEL_SERVER_VERSION = "2024-11-13"
     static let USER_PATHPIXEL_SERVER_VERSION = "2024-11-14"
+    static let USER_SCALE_SERVER_VERSION = "2024-11-14"
+    static let USER_PARAM_SERVER_VERSION = "2024-11-13"
+    static let USER_GEO_SERVER_VERSION = "2024-11-15"
+    static let USER_ENTERANCE_SERVER_VERSION = "2024-11-14"
     
     // MARK: - PREFIX & SUFFIX
     private static let HTTP_PREFIX = "https://"
@@ -40,6 +45,20 @@ public class TJLabsResourceNetworkConstants {
         return USER_URL
     }
     
+    public static func getImageBaseURL() -> String {
+        return IMAGE_URL
+    }
+    
+    // MARK: - Level
+    public static func getUserLevelVersion() -> String {
+        return USER_LEVEL_SERVER_VERSION
+    }
+    
+    public static func getUserLevelURL() -> String {
+        return USER_URL + "/" + USER_LEVEL_SERVER_VERSION + "/level"
+    }
+    
+    // MARK: - Path-Pixel
     public static func getUserPathPixelVersion() -> String {
         return USER_PATHPIXEL_SERVER_VERSION
     }
@@ -47,5 +66,41 @@ public class TJLabsResourceNetworkConstants {
     public static func getUserPathPixelURL() -> String {
         return USER_URL + "/" + USER_PATHPIXEL_SERVER_VERSION + "/path"
     }
-
+    
+    
+    // MARK: - Scale
+    public static func getUserScaleVersion() -> String {
+        return USER_SCALE_SERVER_VERSION
+    }
+    
+    public static func getUserScaleURL() -> String {
+        return USER_URL + "/" + USER_SCALE_SERVER_VERSION + "/scale"
+    }
+    
+    // MARK: - Param
+    public static func getUserParamVersion() -> String {
+        return USER_PARAM_SERVER_VERSION
+    }
+    
+    public static func getUserParamURL() -> String {
+        return USER_URL + "/" + USER_PARAM_SERVER_VERSION + "/parameter"
+    }
+    
+    // MARK: - Geo
+    public static func getUserGeoVersion() -> String {
+        return USER_GEO_SERVER_VERSION
+    }
+    
+    public static func getUserGeoURL() -> String {
+        return USER_URL + "/" + USER_GEO_SERVER_VERSION + "/geofence"
+    }
+    
+    // MARK: - Entrance
+    public static func getUserEntranceVersion() -> String {
+        return USER_ENTERANCE_SERVER_VERSION
+    }
+    
+    public static func getUserEntranceURL() -> String {
+        return USER_URL + "/" + USER_ENTERANCE_SERVER_VERSION + "/entrance"
+    }
 }
