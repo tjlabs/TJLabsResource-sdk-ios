@@ -2,7 +2,7 @@
 import Foundation
 
 protocol ScaleOffsetDelegate: AnyObject {
-    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String)
+    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String, data: [Double]?)
     func onScaleError(_ manager: TJLabsScaleOffsetManager)
 }
 
@@ -46,7 +46,7 @@ class TJLabsScaleOffsetManager {
             
             let scaleKey = "scale_\(sectorId)_\(buildingName)_\(levelName)"
             TJLabsScaleOffsetManager.scaleOffsetDataMap[scaleKey] = element.image_scale
-            delegate?.onScaleOffsetData(self, isOn: true, scaleKey: scaleKey)
+            delegate?.onScaleOffsetData(self, isOn: true, scaleKey: scaleKey, data: element.image_scale)
         }
     }
     

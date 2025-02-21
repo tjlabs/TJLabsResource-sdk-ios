@@ -3,7 +3,7 @@ import Foundation
 import UIKit
 
 protocol BuildingLevelImageDelegate: AnyObject {
-    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String)
+    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String, data: UIImage?)
 }
 
 class TJLabsImageManager {
@@ -30,9 +30,9 @@ class TJLabsImageManager {
                 self.loadBuildingLevelImage(sector_id: sectorId, building: buildingName, level: levelName, completion: { [self] data, error in
                     if let imageData = data {
                         TJLabsImageManager.buildingLevelImageDataMap[imageKey] = imageData
-                        delegate?.onBuildingLevelImageData(self, isOn: true, imageKey: imageKey)
+                        delegate?.onBuildingLevelImageData(self, isOn: true, imageKey: imageKey, data: imageData)
                     } else {
-                        delegate?.onBuildingLevelImageData(self, isOn: false, imageKey: imageKey)
+                        delegate?.onBuildingLevelImageData(self, isOn: false, imageKey: imageKey, data: nil)
                     }
                 })
             }

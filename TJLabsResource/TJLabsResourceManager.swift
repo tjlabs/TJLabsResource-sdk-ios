@@ -13,8 +13,8 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onBuildingLevelError")
     }
     
-    func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String) {
-        delegate?.onPathPixelData(self, isOn: isOn, pathPixelKey: pathPixelKey)
+    func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?) {
+        delegate?.onPathPixelData(self, isOn: isOn, pathPixelKey: pathPixelKey, data: data)
         print("(TJLabsResource) Info : onPathPixelData // isOn = \(isOn) , pathPixelKey = \(pathPixelKey)")
     }
     
@@ -23,13 +23,13 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onPathPixelError")
     }
     
-    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String) {
-        delegate?.onBuildingLevelImageData(self, isOn: isOn, imageKey: imageKey)
+    func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String, data: UIImage?) {
+        delegate?.onBuildingLevelImageData(self, isOn: isOn, imageKey: imageKey, data: data)
         print("(TJLabsResource) Info : onBuildingLevelImageData // isOn = \(isOn) , imageKey = \(imageKey)")
     }
     
-    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String) {
-        delegate?.onScaleOffsetData(self, isOn: isOn, scaleKey: scaleKey)
+    func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String, data: [Double]?) {
+        delegate?.onScaleOffsetData(self, isOn: isOn, scaleKey: scaleKey, data: data)
         print("(TJLabsResource) Info : onScaleOffsetData // isOn = \(isOn) , scaleKey = \(scaleKey)")
     }
     
@@ -38,8 +38,8 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onScaleError")
     }
     
-    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String) {
-        delegate?.onEntranceData(self, isOn: isOn, entranceKey: entranceKey)
+    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?) {
+        delegate?.onEntranceData(self, isOn: isOn, entranceKey: entranceKey, data: data)
         print("(TJLabsResource) Info : onEntranceData // isOn = \(isOn) , entranceKey = \(entranceKey)")
     }
     
