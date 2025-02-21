@@ -95,6 +95,10 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         return TJLabsScaleOffsetManager.scaleOffsetDataMap
     }
     
+    public func getBuildingLevelImageData() -> [String: UIImage] {
+        return TJLabsImageManager.buildingLevelImageDataMap
+    }
+    
     public func getEntranceNumbers() -> Int {
         return TJLabsEntranceManager.entranceNumbers
     }
