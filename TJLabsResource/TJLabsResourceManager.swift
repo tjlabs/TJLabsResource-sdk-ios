@@ -156,7 +156,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     private func loadEntrance(region: ResourceRegion, sectorId: Int) {
-        entranceManager.loadEntrance(sectorId: sectorId)
+        entranceManager.loadEntrance(region: region, sectorId: sectorId)
     }
     
     private func setRegion(region: ResourceRegion) {

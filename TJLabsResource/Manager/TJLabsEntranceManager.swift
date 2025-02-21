@@ -23,7 +23,7 @@ class TJLabsEntranceManager {
         self.region = region
     }
     
-    func loadEntrance(sectorId: Int) {
+    func loadEntrance(region: ResourceRegion, sectorId: Int) {
         postUserEntrance(input: SectorIdOsInput(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, entranceRouteUrl in
             if isSuccess {
                 // 성공
