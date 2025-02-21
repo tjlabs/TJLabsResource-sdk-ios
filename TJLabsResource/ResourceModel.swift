@@ -1,5 +1,6 @@
 
 import Foundation
+import UIKit
 
 public enum ResourceRegion: String {
     case KOREA = "KOREA"
