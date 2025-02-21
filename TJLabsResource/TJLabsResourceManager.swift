@@ -67,6 +67,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     
     // MARK: - Public Methods
     public func loadMapResource(region: ResourceRegion, sectorId: Int) {
+        self.setRegion(region: region)
         self.loadPathPixel(region: region, sectorId: sectorId)
         self.loadImage(region: region, sectorId: sectorId)
         self.loadScaleOffset(region: region, sectorId: sectorId)
@@ -74,6 +75,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     public func loadJupiterResource(region: ResourceRegion, sectorId: Int) {
+        self.setRegion(region: region)
         self.loadPathPixel(region: region, sectorId: sectorId)
         self.loadEntrance(region: region, sectorId: sectorId)
     }
