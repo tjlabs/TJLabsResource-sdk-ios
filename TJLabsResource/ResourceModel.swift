@@ -74,6 +74,17 @@ public struct EntranceRouteDataIsLoaded {
     }
 }
 
+public struct UnitData: Codable {
+    public let category: Int
+    public let number: Int
+    public let name: String
+    public let accessibility: String
+    public let restriction: Bool
+    public let visibility: Bool
+    public let x: Double
+    public let y: Double
+}
+
 // MARK: - POST Input
 struct SectorIdInput: Codable {
     var sector_id: Int = 0
@@ -153,6 +164,17 @@ struct ScaleOutput: Codable {
     let image_scale: [Double]
 }
 
+// MARK: - Unit
+public struct UnitOutput: Codable {
+    let building_name: String
+    let level_name: String
+    let units: [UnitData]
+}
+
+public struct UnitOutputList: Codable {
+    let unit_list: [UnitOutput]
+}
+
 // MARK: - Protocol
 public enum ResourceError {
     case PathPixel
@@ -160,6 +182,7 @@ public enum ResourceError {
     case Image
     case Scale
     case Entrance
+    case Unit
 }
 
 public protocol TJLabsResourceManagerDelegate: AnyObject {
@@ -167,6 +190,7 @@ public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onPathPixelData(_ manager: TJLabsResourceManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?)
     func onBuildingLevelImageData(_ manager: TJLabsResourceManager, isOn: Bool, imageKey: String, data: UIImage?)
     func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, scaleKey: String, data: [Double]?)
+    func onUnitData(_ manager: TJLabsResourceManager, isOn: Bool, unitKey: String, data: [UnitData]?)
     func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?)
     func onError(_ manager: TJLabsResourceManager, error: ResourceError)
 }
