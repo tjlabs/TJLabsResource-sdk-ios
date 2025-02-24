@@ -11,6 +11,7 @@ public class TJLabsResourceNetworkConstants {
     static let USER_PARAM_SERVER_VERSION = "2024-11-13"
     static let USER_GEO_SERVER_VERSION = "2024-11-15"
     static let USER_ENTERANCE_SERVER_VERSION = "2024-11-14"
+    static let USER_UNIT_SERVER_VERSIOM = "2024-11-13"
     
     // MARK: - PREFIX & SUFFIX
     private static let HTTP_PREFIX = "https://"
@@ -102,5 +103,14 @@ public class TJLabsResourceNetworkConstants {
     
     public static func getUserEntranceURL() -> String {
         return USER_URL + "/" + USER_ENTERANCE_SERVER_VERSION + "/entrance"
+    }
+    
+    // MARK: - Unit
+    public static func getUserUnitVersion() -> String {
+        return USER_UNIT_SERVER_VERSIOM
+    }
+    
+    public static func getUserUnitURL() -> String {
+        return USER_URL + "/" + USER_UNIT_SERVER_VERSIOM + "/unit"
     }
 }

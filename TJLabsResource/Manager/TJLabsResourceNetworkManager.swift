@@ -126,4 +126,16 @@ class TJLabsResourceNetworkManager {
         commonSessionCount += 1
         performRequest(request: request, session: session, input: input, completion: completion)
     }
+    
+    func postUnit(url: String, input: SectorIdInput, completion: @escaping (Int, String, SectorIdInput) -> Void) {
+        guard let body = encodeJson(input),
+              let request = makeRequest(url: url, body: body) else {
+            DispatchQueue.main.async { completion(406, "Invalid URL or failed to encode JSON", input) }
+            return
+        }
+
+        let session = commonSessions[commonSessionCount % commonSessions.count]
+        commonSessionCount += 1
+        performRequest(request: request, session: session, input: input, completion: completion)
+    }
 }
