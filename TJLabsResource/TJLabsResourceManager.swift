@@ -2,7 +2,7 @@
 import Foundation
 import UIKit
 
-public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, BuildingLevelImageDelegate, ScaleOffsetDelegate, EntranceDelegate {
+public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, BuildingLevelImageDelegate, ScaleOffsetDelegate, EntranceDelegate, UnitDelegate {
     func onBuildingLevelData(_ manager: TJLabsBuildingLevelManager, isOn: Bool, buildingLevelData: [String: [String]]) {
         delegate?.onBuildingLevelData(self, isOn: isOn, buildingLevelData: buildingLevelData)
         print("(TJLabsResource) Info : onBuildingLevelData // isOn = \(isOn) , buildingLevelData = \(buildingLevelData)")
@@ -48,14 +48,25 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onEntranceError")
     }
     
+    func onUnitData(_ manager: TJLabsUnitManager, isOn: Bool, unitKey: String, data: [UnitData]?) {
+        delegate?.onUnitData(self, isOn: isOn, unitKey: unitKey, data: data)
+        print("(TJLabsResource) Info : onUnitData // isOn = \(isOn) , unitKey = \(unitKey)")
+    }
+    
+    func onUnitError(_ manager: TJLabsUnitManager) {
+        delegate?.onError(self, error: .Unit)
+        print("(TJLabsResource) Info : onUnitError")
+    }
+    
     public static let shared = TJLabsResourceManager()
     public weak var delegate: TJLabsResourceManagerDelegate?
     
     let buildingLevelManager = TJLabsBuildingLevelManager()
     let pathPixelManager = TJLabsPathPixelManager()
-    let entranceManager = TJLabsEntranceManager()
-    let imageManager = TJLabsImageManager()
     let scaleOffsetManager = TJLabsScaleOffsetManager()
+    let imageManager = TJLabsImageManager()
+    let entranceManager = TJLabsEntranceManager()
+    let unitManager = TJLabsUnitManager()
     
     public init() {
         buildingLevelManager.delegate = self
@@ -63,6 +74,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         scaleOffsetManager.delegate = self
         imageManager.delegate = self
         entranceManager.delegate = self
+        unitManager.delegate = self
     }
     
     // MARK: - Public Methods
@@ -121,6 +133,10 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         return TJLabsEntranceManager.entranceOuterWards
     }
     
+    public func getUnitData() -> [String: [UnitData]] {
+        return TJLabsUnitManager.unitDataMap
+    }
+    
     // MARK: - Public Update Methods
     public func updatePathPixelData(key: String, URL: String) {
         TJLabsPathPixelManager.isPerformed = true
@@ -154,7 +170,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     private func loadUnit(region: ResourceRegion, sectorId: Int) {
-        
+        unitManager.loadUnits(region: region, sectorId: sectorId)
     }
     
     private func loadEntrance(region: ResourceRegion, sectorId: Int) {
@@ -169,5 +185,6 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         scaleOffsetManager.setRegion(region: region)
         pathPixelManager.setRegion(region: region)
         entranceManager.setRegion(region: region)
+        unitManager.setRegion(region: region)
     }
 }
