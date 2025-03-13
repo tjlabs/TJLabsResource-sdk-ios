@@ -59,8 +59,8 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onUnitError")
     }
     
-    func onParamData(_ manager: TJLabsParamManager, isOn: Bool, paramKey: String, data: ParameterData?) {
-        delegate?.onParamData(self, isOn: isOn, paramKey: paramKey, data: data)
+    func onParamData(_ manager: TJLabsParamManager, isOn: Bool, data: ParameterData?) {
+        delegate?.onParamData(self, isOn: isOn, data: data)
     }
     
     func onParamError(_ manager: TJLabsParamManager) {
@@ -150,8 +150,8 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         return TJLabsUnitManager.unitDataMap
     }
     
-    public func getParamData() -> [String: ParameterData] {
-        return TJLabsParamManager.paramDataMap
+    public func getParamData() -> ParameterData {
+        return TJLabsParamManager.paramData
     }
     
     // MARK: - Public Update Methods

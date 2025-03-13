@@ -2,12 +2,12 @@
 import Foundation
 
 protocol ParamDelegate: AnyObject {
-    func onParamData(_ manager: TJLabsParamManager, isOn: Bool, paramKey: String, data: ParameterData?)
+    func onParamData(_ manager: TJLabsParamManager, isOn: Bool, data: ParameterData?)
     func onParamError(_ manager: TJLabsParamManager)
 }
 
 class TJLabsParamManager {
-    static var paramDataMap = [String: ParameterData]()
+    static var paramData: ParameterData = ParameterData(trajectory_length: 0, trajectory_diagonal: 0, debug: false, standard_rss: [])
     weak var delegate: ParamDelegate?
     
     var region: ResourceRegion = .KOREA
@@ -41,8 +41,8 @@ class TJLabsParamManager {
     func updateParam(sectorId: Int, paramOutput: ParameterOutput) {
         let paramKey: String = "param_\(sectorId)"
         let paramData = ParameterData(trajectory_length: paramOutput.trajectory_length, trajectory_diagonal: paramOutput.trajectory_diagonal, debug: paramOutput.debug, standard_rss: paramOutput.standard_rss)
-        TJLabsParamManager.paramDataMap[paramKey] = paramData
-        delegate?.onParamData(self, isOn: true, paramKey: paramKey, data: paramData)
+        TJLabsParamManager.paramData = paramData
+        delegate?.onParamData(self, isOn: true, data: paramData)
     }
     
     // MARK: - Decoding

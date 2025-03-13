@@ -210,6 +210,6 @@ public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, scaleKey: String, data: [Double]?)
     func onUnitData(_ manager: TJLabsResourceManager, isOn: Bool, unitKey: String, data: [UnitData]?)
     func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?)
-    func onParamData(_ manager: TJLabsResourceManager, isOn: Bool, paramKey: String, data: ParameterData?)
+    func onParamData(_ manager: TJLabsResourceManager, isOn: Bool, data: ParameterData?)
     func onError(_ manager: TJLabsResourceManager, error: ResourceError)
 }
