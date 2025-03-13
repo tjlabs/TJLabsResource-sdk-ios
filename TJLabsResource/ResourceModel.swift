@@ -85,6 +85,13 @@ public struct UnitData: Codable {
     public let y: Double
 }
 
+public struct ParameterData: Codable {
+    public let trajectory_length: Double
+    public let trajectory_diagonal: Double
+    public let debug: Bool
+    public let standard_rss: [Int]
+}
+
 // MARK: - POST Input
 struct SectorIdInput: Codable {
     var sector_id: Int = 0
@@ -165,15 +172,24 @@ struct ScaleOutput: Codable {
 }
 
 // MARK: - Unit
-public struct UnitOutput: Codable {
+struct UnitOutput: Codable {
     let building_name: String
     let level_name: String
     let units: [UnitData]
 }
 
-public struct UnitOutputList: Codable {
+struct UnitOutputList: Codable {
     let unit_list: [UnitOutput]
 }
+
+// MARK: - Parameter
+struct ParameterOutput: Codable {
+    let trajectory_length: Double
+    let trajectory_diagonal: Double
+    let debug: Bool
+    let standard_rss: [Int]
+}
+
 
 // MARK: - Protocol
 public enum ResourceError {
@@ -183,7 +199,9 @@ public enum ResourceError {
     case Scale
     case Entrance
     case Unit
+    case Param
 }
+
 
 public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onBuildingLevelData(_ manager: TJLabsResourceManager, isOn: Bool, buildingLevelData: [String: [String]])
@@ -192,5 +210,6 @@ public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, scaleKey: String, data: [Double]?)
     func onUnitData(_ manager: TJLabsResourceManager, isOn: Bool, unitKey: String, data: [UnitData]?)
     func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?)
+    func onParamData(_ manager: TJLabsResourceManager, isOn: Bool, paramKey: String, data: ParameterData?)
     func onError(_ manager: TJLabsResourceManager, error: ResourceError)
 }
