@@ -10,15 +10,15 @@ class TJLabsScaleOffsetManager {
     static var scaleOffsetDataMap = [String: [Double]]()
     weak var delegate: ScaleOffsetDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
-    func loadScaleOffset(region: ResourceRegion, sectorId: Int) {
+    func loadScaleOffset(region: String, sectorId: Int) {
         let input = SectorIdOsInput(sector_id: sectorId, operating_system: "iOS")
         TJLabsResourceNetworkManager.shared.postScaleOffset(url: TJLabsResourceNetworkConstants.getUserScaleURL(), input: input, completion: { [self] statusCode, returnedString, scaleInput in
             if statusCode == 200 {

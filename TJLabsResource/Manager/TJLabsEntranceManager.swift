@@ -15,15 +15,15 @@ class TJLabsEntranceManager {
     static var entranceOuterWards = [String]()
     weak var delegate: EntranceDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
-    func loadEntrance(region: ResourceRegion, sectorId: Int) {
+    func loadEntrance(region: String, sectorId: Int) {
         postUserEntrance(input: SectorIdOsInput(sector_id: sectorId, operating_system: "iOS"), completion: { [self] isSuccess, msg, entranceRouteUrl in
             if isSuccess {
                 // 성공
@@ -91,7 +91,7 @@ class TJLabsEntranceManager {
     func loadEntranceRouteFileUrlFromCache(key: String) -> URL? {
         do {
             let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let savedURL = documentsURL.appendingPathComponent("\(self.region.rawValue)/\(key).csv")
+            let savedURL = documentsURL.appendingPathComponent("\(self.region)/\(key).csv")
             
             if FileManager.default.fileExists(atPath: savedURL.path) {
                 print("(TJLabsResource) Info : Entrance Route \(key).csv exists")

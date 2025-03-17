@@ -10,15 +10,15 @@ class TJLabsUnitManager {
     static var unitDataMap = [String: [UnitData]]()
     weak var delegate: UnitDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
-    func loadUnits(region: ResourceRegion, sectorId: Int) {
+    func loadUnits(region: String, sectorId: Int) {
         let input = SectorIdInput(sector_id: sectorId)
         TJLabsResourceNetworkManager.shared.postUnit(url: TJLabsResourceNetworkConstants.getUserUnitURL(), input: input, completion: { [self] statusCode, returnedString, unitInput in
             if statusCode == 200 {

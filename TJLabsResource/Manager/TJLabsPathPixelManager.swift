@@ -13,11 +13,11 @@ class TJLabsPathPixelManager {
     static var ppDataLoaded = [String: PathPixelDataIsLoaded]()
     weak var delegate: PathPixelDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     

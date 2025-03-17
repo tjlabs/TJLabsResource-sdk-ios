@@ -3,7 +3,7 @@ import Foundation
 public class TJLabsFileDownloader {
     public static let shared = TJLabsFileDownloader()
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     public func downloadCSVFile(from url: URL, fname: String, completion: @escaping (URL?, Error?) -> Void) {
         let task = URLSession.shared.downloadTask(with: url) { (tempLocalURL, response, error) in
@@ -35,7 +35,7 @@ public class TJLabsFileDownloader {
         task.resume()
     }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
 }
