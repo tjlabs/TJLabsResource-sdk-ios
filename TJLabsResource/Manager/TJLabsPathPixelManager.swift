@@ -13,11 +13,11 @@ class TJLabsPathPixelManager {
     static var ppDataLoaded = [String: PathPixelDataIsLoaded]()
     weak var delegate: PathPixelDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
@@ -87,7 +87,7 @@ class TJLabsPathPixelManager {
     func loadPathPixelFileUrlFromCache(key: String) -> URL? {
         do {
             let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let savedURL = documentsURL.appendingPathComponent("\(self.region.rawValue)/\(key).csv")
+            let savedURL = documentsURL.appendingPathComponent("\(self.region)/\(key).csv")
             
             if FileManager.default.fileExists(atPath: savedURL.path) {
                 print("(TJLabsResource) Info : Path-Pixel \(key).csv exists")

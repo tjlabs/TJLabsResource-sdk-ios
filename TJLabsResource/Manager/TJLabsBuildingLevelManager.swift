@@ -10,15 +10,15 @@ class TJLabsBuildingLevelManager {
     static var buildingLevelDataMap = [Int: [String: [String]]]()
     weak var delegate: BuildingLevelDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
-    func loadBuildingLevel(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
+    func loadBuildingLevel(region: String, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
         var result = [String: [String]]()
         
         if let data = TJLabsBuildingLevelManager.buildingLevelDataMap[sectorId] {

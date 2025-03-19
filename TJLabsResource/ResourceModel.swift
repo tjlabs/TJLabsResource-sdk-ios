@@ -92,6 +92,13 @@ public struct ParameterData: Codable {
     public let standard_rss: [Int]
 }
 
+public struct GeofenceData: Codable {
+    public let entranceArea: [[Double]]
+    public let entranceMatchingArea: [[Double]]
+    public let levelChangeArea: [[Double]]
+    public let drModeArea: [DRModeArea]
+}
+
 // MARK: - POST Input
 struct SectorIdInput: Codable {
     var sector_id: Int = 0
@@ -190,6 +197,33 @@ struct ParameterOutput: Codable {
     let standard_rss: [Int]
 }
 
+// MARK: - Geofence
+public struct DRModeArea: Codable {
+    let number: Int
+    let range: [Double]
+    let direction: Double
+    let nodes: [DRModeAreaNode]
+}
+
+struct DRModeAreaNode: Codable {
+    let number: Int
+    let center_pos: [Double]
+    let direction_type: String
+}
+
+struct Geofence: Codable {
+    let building_name: String
+    let level_name: String
+    let entrance_area: [[Double]]
+    let entrance_matching_area: [[Double]]
+    let level_change_area: [[Double]]
+    let dr_mode_areas: [DRModeArea]
+}
+
+struct GeofenceOutputList: Codable {
+    let geofence_list: [Geofence]
+}
+
 
 // MARK: - Protocol
 public enum ResourceError {
@@ -200,16 +234,18 @@ public enum ResourceError {
     case Entrance
     case Unit
     case Param
+    case Geofence
 }
 
 
 public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onBuildingLevelData(_ manager: TJLabsResourceManager, isOn: Bool, buildingLevelData: [String: [String]])
-    func onPathPixelData(_ manager: TJLabsResourceManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?)
-    func onBuildingLevelImageData(_ manager: TJLabsResourceManager, isOn: Bool, imageKey: String, data: UIImage?)
-    func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, scaleKey: String, data: [Double]?)
-    func onUnitData(_ manager: TJLabsResourceManager, isOn: Bool, unitKey: String, data: [UnitData]?)
-    func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?)
+    func onPathPixelData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: PathPixelData?)
+    func onBuildingLevelImageData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: UIImage?)
+    func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: [Double]?)
+    func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: EntranceRouteData?)
+    func onUnitData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: [UnitData]?)
     func onParamData(_ manager: TJLabsResourceManager, isOn: Bool, data: ParameterData?)
+    func onGeofenceData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: GeofenceData?)
     func onError(_ manager: TJLabsResourceManager, error: ResourceError)
 }

@@ -24,13 +24,13 @@ public class TJLabsResourceNetworkConstants {
     private(set) static var CSV_URL = HTTP_PREFIX + REGION_PREFIX + "csv" + JUPITER_SUFFIX
     private(set) static var CLIENT_URL = HTTP_PREFIX + REGION_PREFIX + "client" + JUPITER_SUFFIX
     
-    public static func setServerURL(region: ResourceRegion) {
+    public static func setServerURL(region: String) {
         switch region {
-        case .KOREA:
+        case ResourceRegion.KOREA.rawValue:
             REGION_PREFIX = "ap-northeast-2."
-        case .CANADA:
+        case ResourceRegion.CANADA.rawValue:
             REGION_PREFIX = "ca-central-1."
-        case .US_EAST:
+        case ResourceRegion.US_EAST.rawValue:
             REGION_PREFIX = "us-east-1."
         default:
             REGION_PREFIX = ""

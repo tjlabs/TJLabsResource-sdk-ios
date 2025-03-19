@@ -10,15 +10,15 @@ class TJLabsParamManager {
     static var paramData: ParameterData = ParameterData(trajectory_length: 0, trajectory_diagonal: 0, debug: false, standard_rss: [])
     weak var delegate: ParamDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     
     init() { }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
-    func loadParam(region: ResourceRegion, sectorId: Int) {
+    func loadParam(region: String, sectorId: Int) {
         let input = SectorIdOsInput(sector_id: sectorId, operating_system: "iOS")
         TJLabsResourceNetworkManager.shared.postParam(url: TJLabsResourceNetworkConstants.getUserParamURL(), input: input, completion: { [self] statusCode, returnedString, scaleInput in
             if statusCode == 200 {

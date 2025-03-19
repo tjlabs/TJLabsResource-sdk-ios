@@ -10,18 +10,18 @@ class TJLabsImageManager {
     static var buildingLevelImageDataMap = [String: UIImage]()
     weak var delegate: BuildingLevelImageDelegate?
     
-    var region: ResourceRegion = .KOREA
+    var region: String = ResourceRegion.KOREA.rawValue
     var baseURL: String = ""
     
     init() {
         self.baseURL = TJLabsResourceNetworkConstants.getImageBaseURL()
     }
     
-    func setRegion(region: ResourceRegion) {
+    func setRegion(region: String) {
         self.region = region
     }
     
-    func loadImage(region: ResourceRegion, sectorId: Int, buildingLevelData: [String: [String]]) {
+    func loadImage(region: String, sectorId: Int, buildingLevelData: [String: [String]]) {
         for (key, value) in buildingLevelData {
             let buildingName = key
             let levelNameList: [String] = value

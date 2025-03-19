@@ -2,7 +2,7 @@
 import Foundation
 import UIKit
 
-public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, BuildingLevelImageDelegate, ScaleOffsetDelegate, EntranceDelegate, UnitDelegate, ParamDelegate {
+public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, BuildingLevelImageDelegate, ScaleOffsetDelegate, EntranceDelegate, UnitDelegate, ParamDelegate, GeofenceDelegate {
     
     func onBuildingLevelData(_ manager: TJLabsBuildingLevelManager, isOn: Bool, buildingLevelData: [String: [String]]) {
         delegate?.onBuildingLevelData(self, isOn: isOn, buildingLevelData: buildingLevelData)
@@ -15,7 +15,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?) {
-        delegate?.onPathPixelData(self, isOn: isOn, pathPixelKey: pathPixelKey, data: data)
+        delegate?.onPathPixelData(self, isOn: isOn, key: pathPixelKey, data: data)
         print("(TJLabsResource) Info : onPathPixelData // isOn = \(isOn) , pathPixelKey = \(pathPixelKey)")
     }
     
@@ -25,12 +25,12 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     func onBuildingLevelImageData(_ manager: TJLabsImageManager, isOn: Bool, imageKey: String, data: UIImage?) {
-        delegate?.onBuildingLevelImageData(self, isOn: isOn, imageKey: imageKey, data: data)
+        delegate?.onBuildingLevelImageData(self, isOn: isOn, key: imageKey, data: data)
         print("(TJLabsResource) Info : onBuildingLevelImageData // isOn = \(isOn) , imageKey = \(imageKey)")
     }
     
     func onScaleOffsetData(_ manager: TJLabsScaleOffsetManager, isOn: Bool, scaleKey: String, data: [Double]?) {
-        delegate?.onScaleOffsetData(self, isOn: isOn, scaleKey: scaleKey, data: data)
+        delegate?.onScaleOffsetData(self, isOn: isOn, key: scaleKey, data: data)
         print("(TJLabsResource) Info : onScaleOffsetData // isOn = \(isOn) , scaleKey = \(scaleKey)")
     }
     
@@ -40,7 +40,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?) {
-        delegate?.onEntranceData(self, isOn: isOn, entranceKey: entranceKey, data: data)
+        delegate?.onEntranceData(self, isOn: isOn, key: entranceKey, data: data)
         print("(TJLabsResource) Info : onEntranceData // isOn = \(isOn) , entranceKey = \(entranceKey)")
     }
     
@@ -50,7 +50,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     func onUnitData(_ manager: TJLabsUnitManager, isOn: Bool, unitKey: String, data: [UnitData]?) {
-        delegate?.onUnitData(self, isOn: isOn, unitKey: unitKey, data: data)
+        delegate?.onUnitData(self, isOn: isOn, key: unitKey, data: data)
         print("(TJLabsResource) Info : onUnitData // isOn = \(isOn) , unitKey = \(unitKey)")
     }
     
@@ -68,6 +68,16 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onParamError")
     }
     
+    func onGeofenceData(_ manager: TJLabsGeofenceManager, isOn: Bool, geofenceKey: String, data: GeofenceData?) {
+        delegate?.onGeofenceData(self, isOn: isOn, key: geofenceKey, data: data)
+        print("(TJLabsResource) Info : onGeofenceData // isOn = \(isOn) , geofenceKey = \(geofenceKey)")
+    }
+    
+    func onGeofenceError(_ manager: TJLabsGeofenceManager) {
+        delegate?.onError(self, error: .Geofence)
+        print("(TJLabsResource) Info : onGeofenceError")
+    }
+    
     public static let shared = TJLabsResourceManager()
     public weak var delegate: TJLabsResourceManagerDelegate?
     
@@ -78,6 +88,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     let entranceManager = TJLabsEntranceManager()
     let unitManager = TJLabsUnitManager()
     let paramManager = TJLabsParamManager()
+    let geofenceManager = TJLabsGeofenceManager()
     
     public init() {
         buildingLevelManager.delegate = self
@@ -87,10 +98,11 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         entranceManager.delegate = self
         unitManager.delegate = self
         paramManager.delegate = self
+        geofenceManager.delegate = self
     }
     
     // MARK: - Public Methods
-    public func loadMapResource(region: ResourceRegion, sectorId: Int) {
+    public func loadMapResource(region: String, sectorId: Int) {
         self.setRegion(region: region)
         self.loadPathPixel(region: region, sectorId: sectorId)
         self.loadImage(region: region, sectorId: sectorId)
@@ -98,11 +110,12 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         self.loadUnit(region: region, sectorId: sectorId)
     }
     
-    public func loadJupiterResource(region: ResourceRegion, sectorId: Int) {
+    public func loadJupiterResource(region: String, sectorId: Int) {
         self.setRegion(region: region)
         self.loadPathPixel(region: region, sectorId: sectorId)
         self.loadEntrance(region: region, sectorId: sectorId)
         self.loadParam(region: region, sectorId: sectorId)
+        self.loadGeofence(region: region, sectorId: sectorId)
     }
     
     // MARK: - Public Get Methods
@@ -154,6 +167,10 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         return TJLabsParamManager.paramData
     }
     
+    public func getGeofenceData() -> [String: GeofenceData] {
+        return TJLabsGeofenceManager.geofenceDataMap
+    }
+    
     // MARK: - Public Update Methods
     public func updatePathPixelData(key: String, URL: String) {
         TJLabsPathPixelManager.isPerformed = true
@@ -161,7 +178,7 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     }
     
     // MARK: - Private Methods
-    private func loadPathPixel(region: ResourceRegion, sectorId: Int) {
+    private func loadPathPixel(region: String, sectorId: Int) {
         if !TJLabsPathPixelManager.isPerformed {
             TJLabsPathPixelManager.isPerformed = true
             pathPixelManager.loadPathPixel(sectorId: sectorId)
@@ -170,11 +187,11 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         }
     }
     
-    private func loadBuildingLevel(region: ResourceRegion, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
+    private func loadBuildingLevel(region: String, sectorId: Int, completion: @escaping (Bool, [String: [String]]) -> Void) {
         buildingLevelManager.loadBuildingLevel(region: region, sectorId: sectorId, completion: completion)
     }
     
-    private func loadImage(region: ResourceRegion, sectorId: Int) {
+    private func loadImage(region: String, sectorId: Int) {
         self.loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, buildingLevelData in
             if isSuccess {
                 self.imageManager.loadImage(region: region, sectorId: sectorId, buildingLevelData: buildingLevelData)
@@ -182,23 +199,27 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         })
     }
     
-    private func loadScaleOffset(region: ResourceRegion, sectorId: Int) {
+    private func loadScaleOffset(region: String, sectorId: Int) {
         scaleOffsetManager.loadScaleOffset(region: region, sectorId: sectorId)
     }
     
-    private func loadUnit(region: ResourceRegion, sectorId: Int) {
+    private func loadUnit(region: String, sectorId: Int) {
         unitManager.loadUnits(region: region, sectorId: sectorId)
     }
     
-    private func loadEntrance(region: ResourceRegion, sectorId: Int) {
+    private func loadEntrance(region: String, sectorId: Int) {
         entranceManager.loadEntrance(region: region, sectorId: sectorId)
     }
     
-    private func loadParam(region: ResourceRegion, sectorId: Int) {
+    private func loadParam(region: String, sectorId: Int) {
         paramManager.loadParam(region: region, sectorId: sectorId)
     }
     
-    private func setRegion(region: ResourceRegion) {
+    private func loadGeofence(region: String, sectorId: Int) {
+        geofenceManager.loadGeofence(region: region, sectorId: sectorId)
+    }
+    
+    private func setRegion(region: String) {
         TJLabsResourceNetworkConstants.setServerURL(region: region)
         TJLabsFileDownloader.shared.setRegion(region: region)
         buildingLevelManager.setRegion(region: region)
@@ -208,5 +229,6 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         entranceManager.setRegion(region: region)
         unitManager.setRegion(region: region)
         paramManager.setRegion(region: region)
+        geofenceManager.setRegion(region: region)
     }
 }
