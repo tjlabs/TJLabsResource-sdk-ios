@@ -42,7 +42,7 @@ class TJLabsGeofenceManager {
         for geofence in geofenceOutputList.geofence_list {
             let buildingName = geofence.building_name
             let levelNamve = geofence.level_name
-            let geofenceKey: String = "geofence_\(sectorId)"
+            let geofenceKey: String = "geofence_\(sectorId)_\(buildingName)_\(levelNamve)"
             
             let entranceArea = geofence.entrance_area
             let entranceMatchingArea = geofence.entrance_matching_area
