@@ -15,7 +15,7 @@ public class TJLabsFileDownloader {
             do {
                 let documentsURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-                let regionDirectory = documentsURL.appendingPathComponent(self.region.rawValue)
+                let regionDirectory = documentsURL.appendingPathComponent(self.region)
                 if !FileManager.default.fileExists(atPath: regionDirectory.path) {
                     try FileManager.default.createDirectory(at: regionDirectory, withIntermediateDirectories: true, attributes: nil)
                 }
