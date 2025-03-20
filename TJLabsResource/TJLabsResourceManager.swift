@@ -39,9 +39,14 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         print("(TJLabsResource) Info : onScaleError")
     }
     
-    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?) {
+    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceData?) {
         delegate?.onEntranceData(self, isOn: isOn, key: entranceKey, data: data)
         print("(TJLabsResource) Info : onEntranceData // isOn = \(isOn) , entranceKey = \(entranceKey)")
+    }
+    
+    func onEntranceRouteData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?) {
+        delegate?.onEntranceRouteData(self, isOn: isOn, key: entranceKey, data: data)
+        print("(TJLabsResource) Info : onEntranceRouteData // isOn = \(isOn) , entranceKey = \(entranceKey)")
     }
     
     func onEntranceError(_ manager: TJLabsEntranceManager) {
@@ -139,10 +144,6 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         return TJLabsImageManager.buildingLevelImageDataMap
     }
     
-    public func getEntranceNumbers() -> Int {
-        return TJLabsEntranceManager.entranceNumbers
-    }
-    
     public func getEntranceData() -> [String: EntranceData] {
         return TJLabsEntranceManager.entranceDataMap
     }
@@ -153,10 +154,6 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     
     public func getEntranceRouteDataIsLoaded() -> [String: EntranceRouteDataIsLoaded] {
         return TJLabsEntranceManager.entranceRouteDataLoaded
-    }
-    
-    public func getEntranceOuterwards() -> [String] {
-        return TJLabsEntranceManager.entranceOuterWards
     }
     
     public func getUnitData() -> [String: [UnitData]] {
