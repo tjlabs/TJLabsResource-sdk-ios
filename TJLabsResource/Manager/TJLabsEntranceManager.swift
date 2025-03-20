@@ -2,17 +2,18 @@
 import Foundation
 
 protocol EntranceDelegate: AnyObject {
-    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?)
+    func onEntranceData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceData?)
+    func onEntranceRouteData(_ manager: TJLabsEntranceManager, isOn: Bool, entranceKey: String, data: EntranceRouteData?)
     func onEntranceError(_ manager: TJLabsEntranceManager)
 }
 
 class TJLabsEntranceManager {
     
-    static var entranceNumbers: Int = 0
+//    static var entranceNumbers: Int = 0
     static var entranceDataMap = [String: EntranceData]()
     static var entranceRouteDataMap = [String: EntranceRouteData]()
     static var entranceRouteDataLoaded = [String: EntranceRouteDataIsLoaded]()
-    static var entranceOuterWards = [String]()
+//    static var entranceOuterWards = [String]()
     weak var delegate: EntranceDelegate?
     
     var region: String = ResourceRegion.KOREA.rawValue
@@ -40,7 +41,7 @@ class TJLabsEntranceManager {
                                     let entranceRouteData = EntranceRouteData(routeLevel: parsedData.0, route: parsedData.1)
                                     TJLabsEntranceManager.entranceRouteDataMap[key] = entranceRouteData
                                     TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: true, URL: entranceRouteUrlFromServer)
-                                    delegate?.onEntranceData(self, isOn: true, entranceKey: key, data: entranceRouteData)
+                                    delegate?.onEntranceRouteData(self, isOn: true, entranceKey: key, data: entranceRouteData)
                                 } catch {
                                     updateEntranceRoute(key: key, entranceRouteUrlFromServer: entranceRouteUrlFromServer)
                                 }
@@ -76,14 +77,14 @@ class TJLabsEntranceManager {
                     TJLabsEntranceManager.entranceRouteDataMap[key] = entranceRouteData
                     TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: true, URL: entranceRouteUrlFromServer)
                     self.saveEntranceRouteUrlToCache(key: key, entranceRouteUrlFromServer: entranceRouteUrlFromServer)
-                    delegate?.onEntranceData(self, isOn: true, entranceKey: key, data: entranceRouteData)
+                    delegate?.onEntranceRouteData(self, isOn: true, entranceKey: key, data: entranceRouteData)
                 } catch {
                     TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: false, URL: entranceRouteUrlFromServer)
-                    delegate?.onEntranceData(self, isOn: false, entranceKey: key, data: nil)
+                    delegate?.onEntranceRouteData(self, isOn: false, entranceKey: key, data: nil)
                 }
             } else {
                 TJLabsEntranceManager.entranceRouteDataLoaded[key] = EntranceRouteDataIsLoaded(isLoaded: false, URL: entranceRouteUrlFromServer)
-                delegate?.onEntranceData(self, isOn: false, entranceKey: key, data: nil)
+                delegate?.onEntranceRouteData(self, isOn: false, entranceKey: key, data: nil)
             }
         })
     }
@@ -129,10 +130,11 @@ class TJLabsEntranceManager {
                 let outputEntrance = decodeOutputEntrance(jsonString: returnedString)
                 if outputEntrance.0 {
                     //MARK: - Entrance
-                    let entranceInfo = outputEntrance.1
+                    let outputEntranceList = outputEntrance.1
+                    var entranceInfoList: [EntranceInfo] = []
                     var entranceOuterWards: [String] = []
                     var entranceNumbers: Int = 0
-                    for element in entranceInfo.entrance_list {
+                    for element in outputEntranceList.entrance_list {
                         let buildingName = element.building_name
                         let levelName = element.level_name
                         let key = "\(input.sector_id)_\(buildingName)_\(levelName)"
@@ -141,15 +143,17 @@ class TJLabsEntranceManager {
                         entranceNumbers += entrances.count
                         for ent in entrances {
                             let entranceKey = "\(key)_\(ent.spot_number)"
-                            let entranceData = EntranceData(number: ent.spot_number, networkStatus: ent.network_status, velocityScale: ent.scale, innerWardId: ent.innermost_ward.id, innerWardRssi: ent.innermost_ward.rss, innerWardCoord: ent.innermost_ward.pos + [ent.innermost_ward.direction])
-                            TJLabsEntranceManager.entranceDataMap[entranceKey] = entranceData
+                            let entranceInfo = EntranceInfo(building: buildingName, level: levelName, number: ent.spot_number, networkStatus: ent.network_status, velocityScale: ent.scale, innerWardId: ent.innermost_ward.id, innerWardRssi: ent.innermost_ward.rss, innerWardCoord: ent.innermost_ward.pos + [ent.innermost_ward.direction])
+                            entranceInfoList.append(entranceInfo)
                             entranceRouteURL[entranceKey] = ent.url
                             entranceOuterWards.append(ent.outermost_ward_id)
                         }
                     }
                     
-                    TJLabsEntranceManager.entranceNumbers = entranceNumbers
-                    TJLabsEntranceManager.entranceOuterWards = entranceOuterWards
+                    let key = "\(input.sector_id)"
+                    let entranceData = EntranceData(entranceInfoList: entranceInfoList, entranceNumbers: entranceNumbers, outerWards: entranceOuterWards)
+                    TJLabsEntranceManager.entranceDataMap[key] = entranceData
+                    delegate?.onEntranceData(self, isOn: true, entranceKey: key, data: entranceData)
                     let msg = "(TJLabsResource) Success : Load Sector Info // Entrance"
                     completion(true, msg, entranceRouteURL)
                 } else {
