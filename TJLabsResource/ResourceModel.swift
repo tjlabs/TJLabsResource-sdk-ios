@@ -36,7 +36,9 @@ public struct PathPixelDataIsLoaded {
     }
 }
 
-public struct EntranceData {
+public struct EntranceInfo {
+    public var building: String = ""
+    public var level: String = ""
     public var number: Int = 0
     public var networkStatus: Bool = false
     public var velocityScale: Double = 0
@@ -44,7 +46,9 @@ public struct EntranceData {
     public var innerWardRssi: Double = 0
     public var innerWardCoord: [Double] = []
     
-    init(number: Int, networkStatus: Bool, velocityScale: Double, innerWardId: String, innerWardRssi: Double, innerWardCoord: [Double]) {
+    init(building: String, level: String, number: Int, networkStatus: Bool, velocityScale: Double, innerWardId: String, innerWardRssi: Double, innerWardCoord: [Double]) {
+        self.building = building
+        self.level = level
         self.number = number
         self.networkStatus = networkStatus
         self.velocityScale = velocityScale
@@ -52,6 +56,12 @@ public struct EntranceData {
         self.innerWardRssi = innerWardRssi
         self.innerWardCoord = innerWardCoord
     }
+}
+
+public struct EntranceData {
+    public var entranceInfoList: [EntranceInfo]
+    public var entranceNumbers: Int
+    public var outerWards: [String]
 }
 
 public struct EntranceRouteData {
@@ -243,7 +253,8 @@ public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onPathPixelData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: PathPixelData?)
     func onBuildingLevelImageData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: UIImage?)
     func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: [Double]?)
-    func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: EntranceRouteData?)
+    func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: EntranceData?)
+    func onEntranceRouteData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: EntranceRouteData?)
     func onUnitData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: [UnitData]?)
     func onParamData(_ manager: TJLabsResourceManager, isOn: Bool, data: ParameterData?)
     func onGeofenceData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: GeofenceData?)
