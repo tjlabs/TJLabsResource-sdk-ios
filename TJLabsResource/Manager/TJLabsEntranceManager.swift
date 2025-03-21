@@ -9,11 +9,9 @@ protocol EntranceDelegate: AnyObject {
 
 class TJLabsEntranceManager {
     
-//    static var entranceNumbers: Int = 0
     static var entranceDataMap = [String: EntranceData]()
     static var entranceRouteDataMap = [String: EntranceRouteData]()
     static var entranceRouteDataLoaded = [String: EntranceRouteDataIsLoaded]()
-//    static var entranceOuterWards = [String]()
     weak var delegate: EntranceDelegate?
     
     var region: String = ResourceRegion.KOREA.rawValue
@@ -132,26 +130,22 @@ class TJLabsEntranceManager {
                     //MARK: - Entrance
                     let outputEntranceList = outputEntrance.1
                     var entranceInfoList: [EntranceInfo] = []
-                    var entranceOuterWards: [String] = []
-                    var entranceNumbers: Int = 0
                     for element in outputEntranceList.entrance_list {
                         let buildingName = element.building_name
                         let levelName = element.level_name
                         let key = "\(input.sector_id)_\(buildingName)_\(levelName)"
                         
                         let entrances = element.entrances
-                        entranceNumbers += entrances.count
                         for ent in entrances {
                             let entranceKey = "\(key)_\(ent.spot_number)"
-                            let entranceInfo = EntranceInfo(building: buildingName, level: levelName, number: ent.spot_number, networkStatus: ent.network_status, velocityScale: ent.scale, innerWardId: ent.innermost_ward.id, innerWardRssi: ent.innermost_ward.rss, innerWardCoord: ent.innermost_ward.pos + [ent.innermost_ward.direction])
+                            let entranceInfo = EntranceInfo(building: buildingName, level: levelName, number: ent.spot_number, networkStatus: ent.network_status, velocityScale: ent.scale, innerWardId: ent.innermost_ward.id, innerWardRssi: ent.innermost_ward.rss, innerWardCoord: ent.innermost_ward.pos + [ent.innermost_ward.direction], outerWardId: ent.outermost_ward_id)
                             entranceInfoList.append(entranceInfo)
                             entranceRouteURL[entranceKey] = ent.url
-                            entranceOuterWards.append(ent.outermost_ward_id)
                         }
                     }
                     
                     let key = "\(input.sector_id)"
-                    let entranceData = EntranceData(entranceInfoList: entranceInfoList, entranceNumbers: entranceNumbers, outerWards: entranceOuterWards)
+                    let entranceData = EntranceData(entranceInfoList: entranceInfoList)
                     TJLabsEntranceManager.entranceDataMap[key] = entranceData
                     delegate?.onEntranceData(self, isOn: true, entranceKey: key, data: entranceData)
                     let msg = "(TJLabsResource) Success : Load Sector Info // Entrance"
