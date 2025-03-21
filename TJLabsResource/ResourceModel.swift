@@ -45,8 +45,9 @@ public struct EntranceInfo {
     public var innerWardId: String = ""
     public var innerWardRssi: Double = 0
     public var innerWardCoord: [Double] = []
+    public var outerWardId: String = ""
     
-    init(building: String, level: String, number: Int, networkStatus: Bool, velocityScale: Double, innerWardId: String, innerWardRssi: Double, innerWardCoord: [Double]) {
+    init(building: String, level: String, number: Int, networkStatus: Bool, velocityScale: Double, innerWardId: String, innerWardRssi: Double, innerWardCoord: [Double], outerWardId: String) {
         self.building = building
         self.level = level
         self.number = number
@@ -55,13 +56,12 @@ public struct EntranceInfo {
         self.innerWardId = innerWardId
         self.innerWardRssi = innerWardRssi
         self.innerWardCoord = innerWardCoord
+        self.outerWardId = outerWardId
     }
 }
 
 public struct EntranceData {
     public var entranceInfoList: [EntranceInfo]
-    public var entranceNumbers: Int
-    public var outerWards: [String]
 }
 
 public struct EntranceRouteData {
