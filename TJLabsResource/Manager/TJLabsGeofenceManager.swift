@@ -20,7 +20,7 @@ class TJLabsGeofenceManager {
     
     func loadGeofence(region: String, sectorId: Int) {
         let input = SectorIdOsInput(sector_id: sectorId, operating_system: "iOS")
-        TJLabsResourceNetworkManager.shared.postGeo(url: TJLabsResourceNetworkConstants.getUserParamURL(), input: input, completion: { [self] statusCode, returnedString, geoInput in
+        TJLabsResourceNetworkManager.shared.postGeo(url: TJLabsResourceNetworkConstants.getUserGeoURL(), input: input, completion: { [self] statusCode, returnedString, geoInput in
             if statusCode == 200 {
                 // Success
                 let decodedInfo = decodeGeofenceOutputList(jsonString: returnedString)
