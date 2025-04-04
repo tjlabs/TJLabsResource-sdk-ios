@@ -3,6 +3,7 @@ import Foundation
 
 protocol PathPixelDelegate: AnyObject {
     func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?)
+    func onPathPixelDataLoaded(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelDataIsLoaded?)
     func onPathPixelError(_ manager: TJLabsPathPixelManager)
 }
 
@@ -35,9 +36,11 @@ class TJLabsPathPixelManager {
                                 do {
                                     let contents = try String(contentsOf: fileUrlFromCache)
                                     let ppData = self.parsePathPixelData(data: contents)
+                                    let ppIsLoaded = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                                     TJLabsPathPixelManager.ppDataMap[key] = ppData
-                                    TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
+                                    TJLabsPathPixelManager.ppDataLoaded[key] = ppIsLoaded
                                     delegate?.onPathPixelData(self, isOn: true, pathPixelKey: key, data: ppData)
+                                    delegate?.onPathPixelDataLoaded(self, isOn: true, pathPixelKey: key, data: ppIsLoaded)
                                 } catch {
                                     updatePathPixel(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                                 }
@@ -69,17 +72,21 @@ class TJLabsPathPixelManager {
                 do {
                     let contents = try String(contentsOf: url!)
                     let ppData = self.parsePathPixelData(data: contents)
+                    let ppIsLoaded = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
                     TJLabsPathPixelManager.ppDataMap[key] = ppData
-                    TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: true, URL: pathPixelUrlFromServer)
+                    TJLabsPathPixelManager.ppDataLoaded[key] = ppIsLoaded
                     self.savePathPixelUrlToCache(key: key, pathPixelUrlFromServer: pathPixelUrlFromServer)
                     delegate?.onPathPixelData(self, isOn: true, pathPixelKey: key, data: ppData)
+                    delegate?.onPathPixelDataLoaded(self, isOn: true, pathPixelKey: key, data: ppIsLoaded)
                 } catch {
                     TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
                     delegate?.onPathPixelData(self, isOn: false, pathPixelKey: key, data: nil)
+                    delegate?.onPathPixelDataLoaded(self, isOn: false, pathPixelKey: key, data: nil)
                 }
             } else {
                 TJLabsPathPixelManager.ppDataLoaded[key] = PathPixelDataIsLoaded(isLoaded: false, URL: pathPixelUrlFromServer)
                 delegate?.onPathPixelData(self, isOn: false, pathPixelKey: key, data: nil)
+                delegate?.onPathPixelDataLoaded(self, isOn: false, pathPixelKey: key, data: nil)
             }
         })
     }

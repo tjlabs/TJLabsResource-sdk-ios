@@ -4,6 +4,7 @@ import UIKit
 
 public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, BuildingLevelImageDelegate, ScaleOffsetDelegate, EntranceDelegate, UnitDelegate, ParamDelegate, GeofenceDelegate {
     
+
     func onBuildingLevelData(_ manager: TJLabsBuildingLevelManager, isOn: Bool, buildingLevelData: [String: [String]]) {
         delegate?.onBuildingLevelData(self, isOn: isOn, buildingLevelData: buildingLevelData)
         print("(TJLabsResource) Info : onBuildingLevelData // isOn = \(isOn) , buildingLevelData = \(buildingLevelData)")
@@ -17,6 +18,11 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
     func onPathPixelData(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelData?) {
         delegate?.onPathPixelData(self, isOn: isOn, key: pathPixelKey, data: data)
         print("(TJLabsResource) Info : onPathPixelData // isOn = \(isOn) , pathPixelKey = \(pathPixelKey)")
+    }
+    
+    func onPathPixelDataLoaded(_ manager: TJLabsPathPixelManager, isOn: Bool, pathPixelKey: String, data: PathPixelDataIsLoaded?) {
+        delegate?.onPathPixelDataLoaded(self, isOn: isOn, key: pathPixelKey, data: data)
+        print("(TJLabsResource) Info : onPathPixelDataLoaded // isOn = \(isOn) , pathPixelKey = \(pathPixelKey)")
     }
     
     func onPathPixelError(_ manager: TJLabsPathPixelManager) {
