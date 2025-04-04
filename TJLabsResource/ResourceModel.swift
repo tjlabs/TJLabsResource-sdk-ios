@@ -251,6 +251,7 @@ public enum ResourceError {
 public protocol TJLabsResourceManagerDelegate: AnyObject {
     func onBuildingLevelData(_ manager: TJLabsResourceManager, isOn: Bool, buildingLevelData: [String: [String]])
     func onPathPixelData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: PathPixelData?)
+    func onPathPixelDataLoaded(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: PathPixelDataIsLoaded?)
     func onBuildingLevelImageData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: UIImage?)
     func onScaleOffsetData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: [Double]?)
     func onEntranceData(_ manager: TJLabsResourceManager, isOn: Bool, key: String, data: EntranceData?)
