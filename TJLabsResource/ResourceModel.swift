@@ -209,16 +209,29 @@ struct ParameterOutput: Codable {
 
 // MARK: - Geofence
 public struct DRModeArea: Codable {
-    public let number: Int
-    public let range: [Double]
-    public let direction: Double
-    public let nodes: [DRModeAreaNode]
+    public var number: Int
+    public var range: [Double]
+    public var direction: Double
+    public var nodes: [DRModeAreaNode]
+    
+    init(number: Int, range: [Double], direction: Double, nodes: [DRModeAreaNode]) {
+        self.number = number
+        self.range = range
+        self.direction = direction
+        self.nodes = nodes
+    }
 }
 
 public struct DRModeAreaNode: Codable {
-    public let number: Int
-    public let center_pos: [Double]
-    public let direction_type: String
+    public var number: Int
+    public var center_pos: [Double]
+    public var direction_type: String
+    
+    init(number: Int, center_pos: [Double], direction_type: String) {
+        self.number = number
+        self.center_pos = center_pos
+        self.direction_type = direction_type
+    }
 }
 
 struct Geofence: Codable {
