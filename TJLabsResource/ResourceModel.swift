@@ -214,7 +214,7 @@ public struct DRModeArea: Codable {
     public var direction: Double
     public var nodes: [DRModeAreaNode]
     
-    init(number: Int, range: [Double], direction: Double, nodes: [DRModeAreaNode]) {
+    public init(number: Int, range: [Double], direction: Double, nodes: [DRModeAreaNode]) {
         self.number = number
         self.range = range
         self.direction = direction
@@ -227,7 +227,7 @@ public struct DRModeAreaNode: Codable {
     public var center_pos: [Double]
     public var direction_type: String
     
-    init(number: Int, center_pos: [Double], direction_type: String) {
+    public init(number: Int, center_pos: [Double], direction_type: String) {
         self.number = number
         self.center_pos = center_pos
         self.direction_type = direction_type
