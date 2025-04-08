@@ -209,16 +209,16 @@ struct ParameterOutput: Codable {
 
 // MARK: - Geofence
 public struct DRModeArea: Codable {
-    let number: Int
-    let range: [Double]
-    let direction: Double
-    let nodes: [DRModeAreaNode]
+    public let number: Int
+    public let range: [Double]
+    public let direction: Double
+    public let nodes: [DRModeAreaNode]
 }
 
-struct DRModeAreaNode: Codable {
-    let number: Int
-    let center_pos: [Double]
-    let direction_type: String
+public struct DRModeAreaNode: Codable {
+    public let number: Int
+    public let center_pos: [Double]
+    public let direction_type: String
 }
 
 struct Geofence: Codable {
