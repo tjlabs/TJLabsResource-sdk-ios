@@ -63,16 +63,14 @@ class TJLabsBuildingLevelManager {
             let buildingName = element.building_name
             let levelName = element.level_name
             
-            if !levelName.contains("_D") {
-                if var levels = infoBuildingLevel[buildingName] {
-                    levels.append(levelName)
-                    infoBuildingLevel[buildingName] = levels.sorted(by: { lhs, rhs in
-                        return compareFloorNames(lhs: lhs, rhs: rhs)
-                    })
-                } else {
-                    let levels = [levelName]
-                    infoBuildingLevel[buildingName] = levels
-                }
+            if var levels = infoBuildingLevel[buildingName] {
+                levels.append(levelName)
+                infoBuildingLevel[buildingName] = levels.sorted(by: { lhs, rhs in
+                    return compareFloorNames(lhs: lhs, rhs: rhs)
+                })
+            } else {
+                let levels = [levelName]
+                infoBuildingLevel[buildingName] = levels
             }
         }
         return infoBuildingLevel

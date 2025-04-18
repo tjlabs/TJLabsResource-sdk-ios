@@ -26,15 +26,17 @@ class TJLabsImageManager {
             let buildingName = key
             let levelNameList: [String] = value
             for levelName in levelNameList {
-                let imageKey = "image_\(sectorId)_\(buildingName)_\(levelName)"
-                self.loadBuildingLevelImage(sector_id: sectorId, building: buildingName, level: levelName, completion: { [self] data, error in
-                    if let imageData = data {
-                        TJLabsImageManager.buildingLevelImageDataMap[imageKey] = imageData
-                        delegate?.onBuildingLevelImageData(self, isOn: true, imageKey: imageKey, data: imageData)
-                    } else {
-                        delegate?.onBuildingLevelImageData(self, isOn: false, imageKey: imageKey, data: nil)
-                    }
-                })
+                if !levelName.contains("_D") {
+                    let imageKey = "image_\(sectorId)_\(buildingName)_\(levelName)"
+                    self.loadBuildingLevelImage(sector_id: sectorId, building: buildingName, level: levelName, completion: { [self] data, error in
+                        if let imageData = data {
+                            TJLabsImageManager.buildingLevelImageDataMap[imageKey] = imageData
+                            delegate?.onBuildingLevelImageData(self, isOn: true, imageKey: imageKey, data: imageData)
+                        } else {
+                            delegate?.onBuildingLevelImageData(self, isOn: false, imageKey: imageKey, data: nil)
+                        }
+                    })
+                }
             }
         }
     }
