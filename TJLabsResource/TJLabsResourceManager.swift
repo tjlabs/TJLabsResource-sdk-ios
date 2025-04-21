@@ -127,6 +127,8 @@ public class TJLabsResourceManager: BuildingLevelDelegate, PathPixelDelegate, Bu
         self.loadEntrance(region: region, sectorId: sectorId)
         self.loadParam(region: region, sectorId: sectorId)
         self.loadGeofence(region: region, sectorId: sectorId)
+        loadBuildingLevel(region: region, sectorId: sectorId, completion: { [self] isSuccess, data in
+        })
     }
     
     // MARK: - Public Get Methods
